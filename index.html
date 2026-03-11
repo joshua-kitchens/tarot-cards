@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Grimoire</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&family=Uncial+Antiqua&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void:      #07080f;
+  --deep:      #0d0f1c;
+  --midnight:  #13152a;
+  --veil:      #1c1f3a;
+  --gold:      #c9a455;
+  --gold-pale: #e8d48a;
+  --gold-dim:  #7a5f2a;
+  --parchment: #f0e6c8;
+  --parchment-dark: #d9c9a3;
+  --ink:       #1e1408;
+  --ink-soft:  #4a3520;
+  --cyan-glow: #5de4d4;
+  --violet:    #8b5cf6;
+  --rose:      #d97b8a;
+  --ember:     #e07b30;
+  --sage:      #5aaa80;
+  --card-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(201,164,85,0.12);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'IM Fell English', serif;
+  background: var(--void);
+  color: var(--parchment);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* ── STARFIELD ─────────────────────────────────────────────────────── */
+#starfield {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle var(--dur) ease-in-out infinite;
+  opacity: 0;
+}
+@keyframes twinkle {
+  0%,100% { opacity: 0; transform: scale(0.6); }
+  50%      { opacity: var(--bright); transform: scale(1); }
+}
+
+.nebula {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── LAYOUT ────────────────────────────────────────────────────────── */
+.grimoire {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  padding: 0 32px 80px;
+}
+
+/* ── HEADER ────────────────────────────────────────────────────────── */
+header {
+  text-align: center;
+  padding: 56px 20px 40px;
+  position: relative;
+}
+
+.sigil {
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  animation: floatSigil 4s ease-in-out infinite;
+  display: block;
+  filter: drop-shadow(0 0 12px rgba(201,164,85,0.6));
+}
+@keyframes floatSigil {
+  0%,100% { transform: translateY(0);    }
+  50%      { transform: translateY(-8px); }
+}
+
+.header-title {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(1.8rem, 5vw, 3.4rem);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--gold-pale) 0%, var(--gold) 40%, #a06b20 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  filter: drop-shadow(0 0 24px rgba(201,164,85,0.35));
+}
+
+.header-sub {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: rgba(201,164,85,0.55);
+  margin-top: 8px;
+  letter-spacing: 0.12em;
+}
+
+.divider {
+  margin: 18px auto 0;
+  width: 220px;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  position: relative;
+}
+.divider::before {
+  content: '✦';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.6rem;
+  color: var(--gold);
+  background: var(--void);
+  padding: 0 6px;
+}
+
+.new-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 22px;
+  padding: 10px 26px;
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  border-radius: 2px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  color: var(--gold);
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.new-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(201,164,85,0.08), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.new-btn:hover { border-color: var(--gold); color: var(--gold-pale); box-shadow: 0 0 20px rgba(201,164,85,0.2), inset 0 0 20px rgba(201,164,85,0.05); }
+.new-btn:hover::before { opacity: 1; }
+
+/* ── TAG FILTER BAR ─────────────────────────────────────────────────── */
+.filter-section {
+  max-width: 1200px;
+  margin: 0 auto 38px;
+  text-align: center;
+}
+
+.filter-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  color: rgba(201,164,85,0.4);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.filter-pill {
+  padding: 6px 16px;
+  border-radius: 2px;
+  border: 1px solid rgba(201,164,85,0.2);
+  background: transparent;
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: rgba(201,164,85,0.5);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.filter-pill:hover { border-color: rgba(201,164,85,0.5); color: var(--gold); }
+.filter-pill.active {
+  background: rgba(201,164,85,0.1);
+  border-color: var(--gold);
+  color: var(--gold-pale);
+  box-shadow: 0 0 14px rgba(201,164,85,0.15), inset 0 0 14px rgba(201,164,85,0.05);
+}
+.filter-pill.active::before { content: '◆ '; font-size: 0.5rem; vertical-align: middle; }
+
+/* ── CARDS GRID ─────────────────────────────────────────────────────── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 28px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── CARD ───────────────────────────────────────────────────────────── */
+.card-outer {
+  position: relative;
+  animation: manifestCard 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes manifestCard {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card-outer::before, .card-outer::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--gold-dim);
+  border-style: solid;
+  opacity: 0;
+  transition: opacity 0.3s, border-color 0.3s;
+  z-index: 2;
+  pointer-events: none;
+}
+.card-outer::before { top: -4px; left: -4px; border-width: 1px 0 0 1px; }
+.card-outer::after  { bottom: -4px; right: -4px; border-width: 0 1px 1px 0; }
+.card-outer:hover::before, .card-outer:hover::after { opacity: 1; border-color: var(--gold); }
+
+.card-inner-corners::before, .card-inner-corners::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: var(--gold-dim);
+  border-style: solid;
+  opacity: 0;
+  transition: opacity 0.3s, border-color 0.3s;
+  z-index: 2;
+  pointer-events: none;
+}
+.card-inner-corners::before { top: -4px; right: -4px; border-width: 1px 1px 0 0; }
+.card-inner-corners::after  { bottom: -4px; left: -4px; border-width: 0 0 1px 1px; }
+.card-outer:hover .card-inner-corners::before,
+.card-outer:hover .card-inner-corners::after { opacity: 1; border-color: var(--gold); }
+
+.card {
+  background: linear-gradient(160deg, #f5e9c8 0%, #ede0b5 60%, #dfd0a0 100%);
+  border-radius: 1px;
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.22,1,0.36,1), box-shadow 0.3s;
+  position: relative;
+}
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.18) 0%, transparent 60%);
+  pointer-events: none;
+}
+.card-outer:hover .card {
+  transform: translateY(-5px);
+  box-shadow: 0 16px 50px rgba(0,0,0,0.75), 0 0 30px rgba(201,164,85,0.15), 0 0 0 1px rgba(201,164,85,0.25);
+}
+
+.card-glyph-bar {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  position: relative;
+  overflow: hidden;
+}
+.card-glyph-bar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 10%; width: 80%; height: 1px;
+  background: linear-gradient(to right, transparent, currentColor, transparent);
+  opacity: 0.35;
+}
+
+.card-body { padding: 16px 20px 14px; }
+
+.card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.card-preview {
+  font-family: 'IM Fell English', serif;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-preview p { margin: 0; }
+
+.card-footer {
+  padding: 10px 20px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(100,70,20,0.15);
+}
+
+.card-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  padding: 3px 10px;
+  border-radius: 1px;
+  border: 1px solid;
+  text-transform: uppercase;
+}
+
+.card-open {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.75rem;
+  color: rgba(80,50,10,0.4);
+  transition: color 0.2s;
+}
+.card-outer:hover .card-open { color: var(--gold-dim); }
+
+.card-actions {
+  position: absolute;
+  top: 8px; right: 8px;
+  display: flex; gap: 5px;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 6;
+}
+.card-outer:hover .card-actions { opacity: 1; }
+
+.card-del, .card-edit {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.06);
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem;
+  color: rgba(80,50,10,0.3);
+  transition: background 0.2s, color 0.2s;
+}
+.card-del:hover { background: rgba(180,40,40,0.12); color: #a33; }
+.card-edit:hover { background: rgba(201,164,85,0.15); color: var(--gold-dim); }
+
+/* ── COLOR THEMES ─────────────────────────────────────────────────── */
+.theme-violet .card-glyph-bar { color: var(--violet); background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(139,92,246,0.04)); }
+.theme-violet .card-tag       { color: var(--violet); border-color: rgba(139,92,246,0.35); }
+.theme-cyan .card-glyph-bar   { color: var(--cyan-glow); background: linear-gradient(135deg, rgba(93,228,212,0.1), rgba(93,228,212,0.03)); }
+.theme-cyan .card-tag         { color: #2a9988; border-color: rgba(93,228,212,0.35); }
+.theme-rose .card-glyph-bar   { color: var(--rose); background: linear-gradient(135deg, rgba(217,123,138,0.12), rgba(217,123,138,0.04)); }
+.theme-rose .card-tag         { color: var(--rose); border-color: rgba(217,123,138,0.35); }
+.theme-gold .card-glyph-bar   { color: var(--gold); background: linear-gradient(135deg, rgba(201,164,85,0.1), rgba(201,164,85,0.03)); }
+.theme-gold .card-tag         { color: var(--gold-dim); border-color: rgba(201,164,85,0.4); }
+.theme-ember .card-glyph-bar  { color: var(--ember); background: linear-gradient(135deg, rgba(224,123,48,0.12), rgba(224,123,48,0.04)); }
+.theme-ember .card-tag        { color: var(--ember); border-color: rgba(224,123,48,0.35); }
+.theme-sage .card-glyph-bar   { color: var(--sage); background: linear-gradient(135deg, rgba(90,170,128,0.1), rgba(90,170,128,0.03)); }
+.theme-sage .card-tag         { color: var(--sage); border-color: rgba(90,170,128,0.35); }
+
+/* ── READ MODAL ─────────────────────────────────────────────────────── */
+.overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(5,5,15,0.8);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  align-items: center; justify-content: center;
+  padding: 24px;
+}
+.overlay.open { display: flex; }
+
+.modal-scroll {
+  max-width: 680px; width: 100%;
+  max-height: 88vh; overflow-y: auto;
+  position: relative;
+}
+
+.modal-card {
+  background: linear-gradient(160deg, #f5e9c8, #e8d9a8);
+  border-radius: 1px;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 40px rgba(201,164,85,0.12), 0 0 0 1px rgba(201,164,85,0.2);
+  animation: revealScroll 0.4s cubic-bezier(0.22,1,0.36,1);
+  position: relative; overflow: hidden;
+}
+.modal-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 20% 10%, rgba(255,255,255,0.22) 0%, transparent 55%);
+  pointer-events: none;
+}
+@keyframes revealScroll {
+  from { opacity: 0; transform: scale(0.94) translateY(16px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-glyph-bar {
+  height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px; font-size: 0.75rem; letter-spacing: 0.3em;
+  position: relative;
+}
+.modal-glyph-bar::after {
+  content: '';
+  position: absolute; bottom: 0; left: 5%; width: 90%; height: 1px;
+  background: linear-gradient(to right, transparent, currentColor, transparent);
+  opacity: 0.3;
+}
+
+.modal-close {
+  position: absolute; top: 12px; right: 14px;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(0,0,0,0.06);
+  border: 1px solid rgba(100,70,20,0.2);
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; color: var(--ink-soft); z-index: 10;
+  transition: background 0.2s;
+}
+.modal-close:hover { background: rgba(0,0,0,0.12); }
+
+.modal-edit-btn {
+  position: absolute; top: 12px; right: 50px;
+  padding: 5px 14px;
+  background: transparent;
+  border: 1px solid rgba(100,70,20,0.25);
+  border-radius: 1px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  color: var(--ink-soft);
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s;
+}
+.modal-edit-btn:hover { border-color: var(--gold-dim); color: var(--gold-dim); background: rgba(201,164,85,0.06); }
+.modal-body { padding: 22px 32px 34px 32px; }
+
+.md-body h1 { font-family:'Cinzel',serif; font-size:1.5rem; font-weight:600; color:var(--ink); margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid rgba(100,70,20,0.2); letter-spacing:0.04em; }
+.md-body h2 { font-family:'Cinzel',serif; font-size:1.05rem; color:var(--ink); margin:20px 0 8px; letter-spacing:0.04em; }
+.md-body h3 { font-family:'IM Fell English',serif; font-style:italic; font-size:1rem; color:var(--gold-dim); margin:16px 0 6px; }
+.md-body p  { font-size:0.9rem; line-height:1.9; color:var(--ink-soft); margin-bottom:10px; }
+.md-body ul,.md-body ol { margin:8px 0 12px 20px; }
+.md-body li { font-size:0.88rem; line-height:1.85; color:var(--ink-soft); margin-bottom:3px; }
+.md-body strong { color:var(--ink); font-weight:700; }
+.md-body em { font-style:italic; color:#5a3a10; }
+.md-body code { font-family:'Courier New',monospace; background:rgba(0,0,0,0.07); padding:1px 5px; border-radius:2px; font-size:0.83em; }
+.md-body pre { background:rgba(0,0,0,0.06); border-left:2px solid var(--gold-dim); padding:12px 16px; border-radius:1px; overflow-x:auto; margin:12px 0; }
+.md-body pre code { background:none; padding:0; }
+.md-body blockquote { border-left:2px solid rgba(180,130,50,0.5); padding-left:16px; margin:10px 0; font-style:italic; color:rgba(80,50,10,0.6); }
+.md-body a { color:var(--gold-dim); text-decoration:underline; }
+.md-body hr { border:none; border-top:1px solid rgba(0,0,0,0.1); margin:18px 0; }
+
+/* ── EDITOR MODAL ───────────────────────────────────────────────────── */
+.editor-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(5,5,15,0.85); backdrop-filter:blur(8px);
+  z-index:2000; align-items:center; justify-content:center; padding:24px;
+}
+.editor-overlay.open { display:flex; }
+
+.editor-card {
+  background: var(--midnight);
+  border: 1px solid rgba(201,164,85,0.2);
+  border-radius: 2px;
+  max-width: 680px; width: 100%;
+  max-height: 92vh;
+  display: flex; flex-direction: column;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 40px rgba(201,164,85,0.08);
+  animation: revealScroll 0.35s cubic-bezier(0.22,1,0.36,1);
+  overflow: hidden;
+}
+
+.editor-header {
+  padding: 18px 24px;
+  background: linear-gradient(to right, rgba(201,164,85,0.06), transparent);
+  border-bottom: 1px solid rgba(201,164,85,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.editor-header h2 { font-family:'Cinzel',serif; font-size:0.85rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; }
+.editor-header button { background:none; border:none; color:rgba(201,164,85,0.4); cursor:pointer; font-size:1.1rem; transition:color 0.2s; }
+.editor-header button:hover { color:var(--gold); }
+
+.editor-fields { padding:20px 24px; display:flex; flex-direction:column; gap:14px; flex:1; overflow:hidden; }
+.editor-fields label { font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(201,164,85,0.5); display:block; margin-bottom:5px; }
+.editor-fields input, .editor-fields select { width:100%; padding:9px 13px; background:rgba(255,255,255,0.04); border:1px solid rgba(201,164,85,0.15); border-radius:1px; font-family:'IM Fell English',serif; font-size:0.9rem; color:var(--parchment); outline:none; transition:border-color 0.2s; }
+.editor-fields input:focus,.editor-fields select:focus { border-color:rgba(201,164,85,0.45); }
+.editor-fields select option { background:var(--midnight); }
+.editor-fields textarea { flex:1; width:100%; min-height:240px; padding:12px 14px; background:rgba(255,255,255,0.03); border:1px solid rgba(201,164,85,0.12); border-radius:1px; font-family:'IM Fell English',serif; font-size:0.88rem; color:rgba(240,230,200,0.85); resize:vertical; outline:none; line-height:1.75; transition:border-color 0.2s; }
+.editor-fields textarea:focus { border-color:rgba(201,164,85,0.4); }
+
+.editor-actions { padding:14px 24px 18px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid rgba(201,164,85,0.1); }
+.btn-cancel { padding:9px 20px; background:transparent; border:1px solid rgba(201,164,85,0.2); border-radius:1px; font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.12em; color:rgba(201,164,85,0.5); cursor:pointer; transition:all 0.2s; }
+.btn-cancel:hover { border-color:rgba(201,164,85,0.4); color:var(--gold); }
+.btn-save { padding:9px 24px; background:linear-gradient(135deg,rgba(201,164,85,0.18),rgba(201,164,85,0.08)); border:1px solid rgba(201,164,85,0.4); border-radius:1px; font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.12em; color:var(--gold-pale); cursor:pointer; transition:all 0.2s; }
+.btn-save:hover { background:linear-gradient(135deg,rgba(201,164,85,0.28),rgba(201,164,85,0.14)); box-shadow:0 0 20px rgba(201,164,85,0.2); }
+
+/* ── FEATURED IMAGE ─────────────────────────────────────────────── */
+.card-featured-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  display: block;
+  border-bottom: 1px solid rgba(100,70,20,0.12);
+  filter: sepia(15%) contrast(1.05);
+  transition: filter 0.3s;
+}
+.card-outer:hover .card-featured-img { filter: sepia(5%) contrast(1.08); }
+
+/* When image exists, glyph bar sits over it */
+.card-has-image .card-glyph-bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 3;
+  background: linear-gradient(to bottom, rgba(10,8,5,0.55), transparent);
+  height: 36px;
+}
+.card-has-image .card-img-wrap {
+  position: relative;
+}
+
+/* Modal featured image */
+.modal-featured-img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  display: block;
+  filter: sepia(10%) contrast(1.04);
+}
+.modal-featured-img + .modal-body { padding-top: 20px; }
+
+/* ── IMAGE UPLOAD IN EDITOR ─────────────────────────────────────── */
+.img-upload-area {
+  border: 1px dashed rgba(201,164,85,0.25);
+  border-radius: 2px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.img-drop-zone {
+  border: 1px dashed rgba(201,164,85,0.18);
+  border-radius: 2px;
+  padding: 18px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.img-drop-zone:hover, .img-drop-zone.drag-over {
+  border-color: rgba(201,164,85,0.5);
+  background: rgba(201,164,85,0.04);
+}
+.img-drop-zone input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+  border: none; background: none;
+}
+.img-drop-label {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  color: rgba(201,164,85,0.45);
+  pointer-events: none;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.img-drop-label span { font-size: 1.4rem; }
+
+.img-url-row {
+  display: flex; gap: 8px; align-items: center;
+}
+.img-url-row input {
+  flex: 1;
+  padding: 7px 11px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(201,164,85,0.15);
+  border-radius: 1px;
+  font-family: 'IM Fell English', serif;
+  font-size: 0.82rem;
+  color: var(--parchment);
+  outline: none;
+}
+.img-url-row input:focus { border-color: rgba(201,164,85,0.4); }
+.img-url-row input::placeholder { color: rgba(201,164,85,0.3); }
+.btn-url-load {
+  padding: 7px 14px;
+  background: rgba(201,164,85,0.08);
+  border: 1px solid rgba(201,164,85,0.25);
+  border-radius: 1px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--gold);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+.btn-url-load:hover { background: rgba(201,164,85,0.16); }
+
+.img-preview-wrap {
+  position: relative;
+  display: none;
+}
+.img-preview-wrap.show { display: block; }
+.img-preview {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 1px;
+  display: block;
+  filter: sepia(10%);
+  border: 1px solid rgba(201,164,85,0.15);
+}
+.img-clear-btn {
+  position: absolute;
+  top: 7px; right: 7px;
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: rgba(10,8,5,0.65);
+  border: 1px solid rgba(201,164,85,0.3);
+  color: var(--gold-pale);
+  font-size: 0.65rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.img-clear-btn:hover { background: rgba(180,40,40,0.6); }
+
+.img-divider {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Cinzel', serif; font-size: 0.6rem;
+  letter-spacing: 0.15em; color: rgba(201,164,85,0.25);
+}
+.img-divider::before, .img-divider::after {
+  content: ''; flex: 1; height: 1px;
+  background: rgba(201,164,85,0.12);
+}
+.empty-state { grid-column:1/-1; text-align:center; padding:80px 20px; }
+.empty-state p { font-family:'IM Fell English',serif; font-style:italic; font-size:1.1rem; color:rgba(201,164,85,0.3); }
+.card-outer.hidden { display:none; }
+
+/* ── DATA TOOLBAR ─────────────────────────────────────────────────── */
+.data-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+.data-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  background: transparent;
+  border: 1px solid rgba(201,164,85,0.15);
+  border-radius: 2px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  color: rgba(201,164,85,0.4);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.data-btn:hover {
+  border-color: rgba(201,164,85,0.4);
+  color: var(--gold);
+  background: rgba(201,164,85,0.04);
+}
+.data-toolbar-sep {
+  width: 1px;
+  height: 14px;
+  background: rgba(201,164,85,0.12);
+}
+
+/* ── IMPORT OVERLAY ──────────────────────────────────────────────── */
+.import-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(5,5,15,0.88);
+  backdrop-filter: blur(8px);
+  z-index: 3000;
+  align-items: center; justify-content: center;
+  padding: 24px;
+}
+.import-overlay.open { display: flex; }
+
+.import-card {
+  background: var(--midnight);
+  border: 1px solid rgba(201,164,85,0.2);
+  border-radius: 2px;
+  max-width: 520px; width: 100%;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 40px rgba(201,164,85,0.08);
+  animation: revealScroll 0.35s cubic-bezier(0.22,1,0.36,1);
+  overflow: hidden;
+}
+.import-header {
+  padding: 18px 24px;
+  background: linear-gradient(to right, rgba(201,164,85,0.06), transparent);
+  border-bottom: 1px solid rgba(201,164,85,0.12);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.import-header h2 {
+  font-family: 'Cinzel', serif; font-size: 0.85rem;
+  letter-spacing: 0.18em; color: var(--gold); text-transform: uppercase;
+}
+.import-header button {
+  background: none; border: none;
+  color: rgba(201,164,85,0.4); cursor: pointer; font-size: 1.1rem; transition: color 0.2s;
+}
+.import-header button:hover { color: var(--gold); }
+
+.import-body { padding: 22px 24px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+.import-drop-zone {
+  border: 1px dashed rgba(201,164,85,0.22);
+  border-radius: 2px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  position: relative;
+}
+.import-drop-zone:hover, .import-drop-zone.drag-over {
+  border-color: rgba(201,164,85,0.5);
+  background: rgba(201,164,85,0.04);
+}
+.import-drop-zone input[type=file] {
+  position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+}
+.import-drop-label {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: rgba(201,164,85,0.4);
+  pointer-events: none;
+}
+.import-drop-label .drop-icon { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+
+.import-status {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.82rem;
+  text-align: center;
+  min-height: 1.2em;
+  transition: color 0.2s;
+}
+.import-status.ok  { color: var(--sage); }
+.import-status.err { color: var(--rose); }
+
+.import-mode-row {
+  display: flex;
+  gap: 8px;
+}
+.import-mode-btn {
+  flex: 1;
+  padding: 9px 10px;
+  border-radius: 1px;
+  border: 1px solid rgba(201,164,85,0.18);
+  background: transparent;
+  font-family: 'Cinzel', serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  color: rgba(201,164,85,0.45);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.import-mode-btn.selected {
+  border-color: var(--gold);
+  color: var(--gold-pale);
+  background: rgba(201,164,85,0.08);
+}
+.import-note {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.75rem;
+  color: rgba(201,164,85,0.3);
+  text-align: center;
+  line-height: 1.5;
+}
+.import-actions {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 14px 24px 18px;
+  border-top: 1px solid rgba(201,164,85,0.1);
+}
+
+/* ── SCROLLBAR ────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(201,164,85,0.2); border-radius: 2px; }
+</style>
+</head>
+<body>
+
+<div id="starfield">
+  <div class="nebula" style="width:600px;height:400px;top:-100px;left:-150px;background:radial-gradient(ellipse,rgba(80,40,140,0.18),transparent 70%)"></div>
+  <div class="nebula" style="width:500px;height:350px;bottom:0;right:-100px;background:radial-gradient(ellipse,rgba(40,80,140,0.14),transparent 70%)"></div>
+  <div class="nebula" style="width:400px;height:300px;top:40%;left:40%;background:radial-gradient(ellipse,rgba(100,50,150,0.1),transparent 70%)"></div>
+</div>
+
+<div class="grimoire">
+  <header>
+    <span class="sigil">✦</span>
+    <h1 class="header-title">The Grimoire</h1>
+    <p class="header-sub">a collection of bound knowledge &amp; arcane notes</p>
+    <div class="divider"></div>
+    <button class="new-btn" onclick="openEditor()">✦ Inscribe New Scroll</button>
+    <div class="data-toolbar">
+      <button class="data-btn" onclick="exportJSON()">⬇ Export Scrolls</button>
+      <div class="data-toolbar-sep"></div>
+      <button class="data-btn" onclick="openImport()">⬆ Import Scrolls</button>
+    </div>
+  </header>
+
+  <div class="filter-section">
+    <div class="filter-label">Filter by Sigil</div>
+    <div class="filter-bar" id="filterBar"></div>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid"></div>
+</div>
+
+<!-- Read Overlay -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal-scroll">
+    <div class="modal-card" id="modalCard">
+      <div class="modal-glyph-bar" id="modalGlyphBar"></div>
+      <img id="modalFeaturedImg" class="modal-featured-img" src="" alt="" style="display:none"/>
+      <button class="modal-edit-btn" id="modalEditBtn" onclick="editFromModal()">✎ Revise</button>
+      <button class="modal-close" onclick="closeOverlay()">✕</button>
+      <div class="modal-body"><div class="md-body" id="modalBody"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Editor Overlay -->
+<div class="editor-overlay" id="editorOverlay" onclick="closeEditorModal(event)">
+  <div class="editor-card" onclick="event.stopPropagation()">
+    <div class="editor-header">
+      <h2 id="editorTitle">✦ Inscribe New Scroll</h2>
+      <button onclick="closeEditor()">✕</button>
+    </div>
+    <div class="editor-fields">
+      <div>
+        <label>Title of Scroll</label>
+        <input type="text" id="edTitle" placeholder="Name this knowledge…"/>
+      </div>
+      <div style="display:flex;gap:14px;">
+        <div style="flex:1">
+          <label>Sigil Tag</label>
+          <input type="text" id="edTag" placeholder="#arcana"/>
+        </div>
+        <div style="flex:1">
+          <label>Aura Color</label>
+          <select id="edColor">
+            <option value="theme-violet">Violet — Mystery</option>
+            <option value="theme-cyan" selected>Cyan — Clarity</option>
+            <option value="theme-rose">Rose — Passion</option>
+            <option value="theme-gold">Gold — Wisdom</option>
+            <option value="theme-ember">Ember — Power</option>
+            <option value="theme-sage">Sage — Growth</option>
+          </select>
+        </div>
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;">
+        <label>Contents (Markdown Accepted)</label>
+        <textarea id="edContent" placeholder="# Begin your scroll&#10;&#10;Write in **markdown** and let your knowledge flow…"></textarea>
+      </div>
+      <div class="img-upload-area">
+        <label style="margin-bottom:0">Featured Visage <span style="font-weight:400;text-transform:none;font-family:'IM Fell English',serif;font-style:italic;color:rgba(201,164,85,0.35)">(optional)</span></label>
+        <!-- Preview -->
+        <div class="img-preview-wrap" id="imgPreviewWrap">
+          <img class="img-preview" id="imgPreview" src="" alt="Featured image preview"/>
+          <button class="img-clear-btn" onclick="clearImage()" title="Remove image">✕</button>
+        </div>
+        <!-- Drop zone -->
+        <div class="img-drop-zone" id="imgDropZone">
+          <div class="img-drop-label">
+            <span>🜃</span>
+            Drop an image here or click to upload
+          </div>
+          <input type="file" id="imgFileInput" accept="image/*" onchange="handleFileUpload(event)"/>
+        </div>
+        <div class="img-divider">or</div>
+        <!-- URL row -->
+        <div class="img-url-row">
+          <input type="text" id="imgUrlInput" placeholder="Paste an image URL…"/>
+          <button class="btn-url-load" onclick="loadFromUrl()">Bind</button>
+        </div>
+      </div>
+    </div>
+    <div class="editor-actions">
+      <button class="btn-cancel" onclick="closeEditor()">Discard</button>
+      <button class="btn-save" id="edSaveBtn" onclick="saveCard()">✦ Seal &amp; Pin</button>
+    </div>
+  </div>
+</div>
+
+<!-- Import Overlay -->
+<div class="import-overlay" id="importOverlay" onclick="closeImportModal(event)">
+  <div class="import-card" onclick="event.stopPropagation()">
+    <div class="import-header">
+      <h2>⬆ Import Scrolls</h2>
+      <button onclick="closeImport()">✕</button>
+    </div>
+    <div class="import-body">
+      <div class="import-drop-zone" id="importDropZone">
+        <div class="import-drop-label">
+          <span class="drop-icon">📜</span>
+          Drop a grimoire JSON file here<br/>or click to choose one
+        </div>
+        <input type="file" id="importFileInput" accept=".json,application/json" onchange="handleImportFile(event)"/>
+      </div>
+      <div class="import-status" id="importStatus"></div>
+      <div>
+        <label style="font-family:'Cinzel',serif;font-size:0.68rem;letter-spacing:0.18em;text-transform:uppercase;color:rgba(201,164,85,0.5);display:block;margin-bottom:8px;">Import Mode</label>
+        <div class="import-mode-row">
+          <button class="import-mode-btn selected" id="modeMerge" onclick="setImportMode('merge')">✦ Merge — keep existing + add new</button>
+          <button class="import-mode-btn" id="modeReplace" onclick="setImportMode('replace')">⊛ Replace — overwrite everything</button>
+        </div>
+      </div>
+      <p class="import-note">Only JSON files exported from The Grimoire are supported.<br/>Images stored as URLs will be preserved; uploaded images are embedded as base64.</p>
+    </div>
+    <div class="import-actions">
+      <button class="btn-cancel" onclick="closeImport()">Cancel</button>
+      <button class="btn-save" id="importConfirmBtn" onclick="confirmImport()" disabled style="opacity:0.4;cursor:not-allowed">✦ Bind Scrolls</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── Starfield ─────────────────────────────────────────────────── */
+(function(){
+  const sf = document.getElementById('starfield');
+  for(let i=0;i<160;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*2.2+0.4;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${2+Math.random()*5}s;--bright:${0.3+Math.random()*0.7};animation-delay:${Math.random()*6}s;`;
+    sf.appendChild(s);
+  }
+})();
+
+/* ── Config ────────────────────────────────────────────────────── */
+const glyphs = {
+  'theme-violet': ['☽','✦','⁕','☽'],
+  'theme-cyan':   ['◈','⊹','✦','◈'],
+  'theme-rose':   ['❋','✦','✾','❋'],
+  'theme-gold':   ['⚜','✦','⚜','✦'],
+  'theme-ember':  ['⊛','✦','⊛','✦'],
+  'theme-sage':   ['⁂','✦','⁂','✦'],
+};
+const themeColors = {
+  'theme-violet':'#8b5cf6','theme-cyan':'#5de4d4','theme-rose':'#d97b8a',
+  'theme-gold':'#c9a455','theme-ember':'#e07b30','theme-sage':'#5aaa80',
+};
+
+/* ── Sample Data ────────────────────────────────────────────────── */
+const sampleCards = [
+  { id:1, title:"The First Inscription", tag:"#guide", color:"theme-gold",
+    content:`# The First Inscription\n\nWelcome, seeker. This is **The Grimoire** — a place to bind your knowledge into scrolls.\n\n## What You May Do\n- Write notes in **Markdown**\n- Filter cards by their sigil tag below the header\n- Click any scroll to read the full text\n- Inscribe new scrolls with the button above\n\n## Markdown is Supported\n\`**bold**\`, *italic*, \`# headings\`, lists, code blocks, and blockquotes.\n\n> *All knowledge begins with a single inscription.*` },
+  { id:2, title:"Arcane Project Ideas", tag:"#arcana", color:"theme-violet",
+    content:`# Arcane Project Ideas 🜁\n\nThings to conjure into existence.\n\n## Web Grimoires\n- **This very scroll** — notecards that render markdown\n- A potion recipe manager with ingredient tagging\n- An offline-first dream journal\n\n## Esoteric Learning\n1. WebAssembly rituals\n2. Functional CSS alchemy\n3. The art of offline-first spellcraft\n\n> *"The cosmos is full of knowledge waiting to be named."*` },
+  { id:3, title:"Sourdough Ritual", tag:"#recipes", color:"theme-ember",
+    content:`# Sourdough Bread 🍞\n\n*An overnight binding ritual.*\n\n## Ingredients\n- 450g bread flour\n- 325g water (75°F)\n- 90g active starter\n- 9g salt\n\n## Method\n**1. Mix** — Combine flour and water, rest 30 min.\n**2. Bind** — Fold in starter and salt. Stretch & fold 4× over 2 hrs.\n**3. Shape** — Form a boule. Refrigerate overnight.\n**4. Conjure** — Dutch oven 500°F: 20 min covered, 25 min uncovered.\n\n*Score deeply before baking for the best bloom.*` },
+  { id:4, title:"Tomes of Wisdom", tag:"#books", color:"theme-cyan",
+    content:`# Tomes of Wisdom\n\n## Thinking, Fast and Slow — Kahneman\n\n- **System 1** — swift, instinctive, emotional\n- **System 2** — slow, deliberate, rational\n\nThe illusion: we believe we think deliberately far more than we do.\n\n---\n\n## Atomic Habits — Clear\n\n> *"You do not rise to the level of your goals. You fall to the level of your systems."*\n\n1. Make it obvious\n2. Make it attractive\n3. Make it easy\n4. Make it satisfying` },
+  { id:5, title:"Weekly Ritual Checklist", tag:"#rituals", color:"theme-rose",
+    content:`# Weekly Review ✦\n\n## Completed Rites\n- [x] Shipped the grimoire prototype\n- [x] Reviewed the tome of PRs\n- [x] Communed with family\n\n## In Progress\n- [ ] Inscribe unit test scrolls\n- [ ] Update the design token grimoire\n- [ ] Plan the Q3 vision ritual\n\n## Next Week's Focus\n1. Performance augury\n2. Onboarding flow enchantment\n3. Team retrospective circle` },
+  { id:6, title:"Markdown Spellbook", tag:"#guide", color:"theme-sage",
+    content:`# Markdown Spellbook\n\nAll formatting runes at your disposal.\n\n## Text Enchantments\n**Bold**, *italic*, ~~crossed out~~, \`inline rune\`\n\n## Code Ritual\n\`\`\`js\nconst summon = name => \`Arise, \${name}!\`;\n\`\`\`\n\n## The Wise Say\n> *Less is more — unless the spell demands more.*\n\n## Nested Scrolls\n- Portals to knowledge\n  - Inner rite one\n  - Inner rite two\n\n---\n*Tables and images shall come in the next age.*` },
+];
+
+/* ── State ──────────────────────────────────────────────────────── */
+let cards = JSON.parse(localStorage.getItem('grimoire_v2') || 'null') || sampleCards;
+let nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
+let activeTag = 'all';
+let editingId = null;   // null = new card, number = editing existing
+let openCardId = null;  // track which card is open in read modal
+
+function save(){ try{ localStorage.setItem('grimoire_v2', JSON.stringify(cards)); }catch(e){} }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ── Filter ─────────────────────────────────────────────────────── */
+function getAllTags(){
+  return ['all', ...Array.from(new Set(cards.map(c=>c.tag))).sort()];
+}
+
+function renderFilters(){
+  document.getElementById('filterBar').innerHTML = getAllTags().map(tag=>`
+    <button class="filter-pill ${activeTag===tag?'active':''}" onclick="setFilter('${esc(tag)}')">
+      ${tag==='all' ? '✦ All Scrolls' : esc(tag)}
+    </button>`).join('');
+}
+
+function setFilter(tag){
+  activeTag = tag;
+  renderFilters();
+  document.querySelectorAll('.card-outer').forEach(el=>{
+    el.classList.toggle('hidden', tag!=='all' && el.dataset.tag !== tag);
+  });
+}
+
+/* ── Render ─────────────────────────────────────────────────────── */
+function renderCards(){
+  const grid = document.getElementById('cardsGrid');
+  if(!cards.length){
+    grid.innerHTML='<div class="empty-state"><p>No scrolls yet — inscribe the first one.</p></div>';
+    renderFilters(); return;
+  }
+  grid.innerHTML = cards.map((card,i)=>{
+    const g = glyphs[card.color]||glyphs['theme-gold'];
+    const hasImg = !!card.image;
+    return `
+    <div class="card-outer ${esc(card.color)}${hasImg?' card-has-image':''}" data-tag="${esc(card.tag)}"
+         style="animation-delay:${i*0.06}s">
+      <div class="card-inner-corners"></div>
+      <div class="card" onclick="openCard(${card.id})">
+        ${hasImg ? `<div class="card-img-wrap"><img class="card-featured-img" src="${esc(card.image)}" alt=""/><div class="card-glyph-bar">${g.join(' ')}</div></div>` : `<div class="card-glyph-bar">${g.join(' ')}</div>`}
+        <div class="card-body">
+          <div class="card-title">${esc(card.title)}</div>
+          <div class="card-preview" id="prev-${card.id}"></div>
+        </div>
+        <div class="card-footer">
+          <span class="card-tag">${esc(card.tag)}</span>
+          <span class="card-open">open scroll →</span>
+        </div>
+      </div>
+      <div class="card-actions">
+        <button class="card-edit" onclick="event.stopPropagation();openEditor(${card.id})" title="Revise">✎</button>
+        <button class="card-del" onclick="event.stopPropagation();deleteCard(${card.id})" title="Banish">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+
+  cards.forEach(card=>{
+    const el = document.getElementById(`prev-${card.id}`);
+    if(el) el.innerHTML = marked.parse(card.content);
+  });
+
+  renderFilters();
+  // re-apply active filter
+  if(activeTag !== 'all'){
+    document.querySelectorAll('.card-outer').forEach(el=>{
+      el.classList.toggle('hidden', el.dataset.tag !== activeTag);
+    });
+  }
+}
+
+/* ── Open card ──────────────────────────────────────────────────── */
+function openCard(id){
+  const card = cards.find(c=>c.id===id);
+  if(!card) return;
+  openCardId = id;
+  const g = glyphs[card.color]||glyphs['theme-gold'];
+  const bar = document.getElementById('modalGlyphBar');
+  bar.textContent = g.join('  ');
+  bar.style.color = themeColors[card.color]||'#c9a455';
+  // Featured image
+  const mfi = document.getElementById('modalFeaturedImg');
+  if(card.image){ mfi.src=card.image; mfi.style.display='block'; }
+  else { mfi.style.display='none'; mfi.src=''; }
+  document.getElementById('modalBody').innerHTML = marked.parse(card.content);
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeOverlay(){ document.getElementById('overlay').classList.remove('open'); document.body.style.overflow=''; }
+function closeModal(e){ if(e.target===document.getElementById('overlay')) closeOverlay(); }
+
+/* ── Delete ─────────────────────────────────────────────────────── */
+function deleteCard(id){
+  cards = cards.filter(c=>c.id!==id);
+  save();
+  renderCards();
+}
+
+/* ── Image helpers ──────────────────────────────────────────────── */
+let currentImage = null; // base64 or URL string
+
+function setImagePreview(src){
+  currentImage = src;
+  document.getElementById('imgPreview').src = src;
+  document.getElementById('imgPreviewWrap').classList.add('show');
+  document.getElementById('imgDropZone').style.display = 'none';
+  document.getElementById('imgUrlInput').value = '';
+}
+
+function clearImage(){
+  currentImage = null;
+  document.getElementById('imgPreview').src = '';
+  document.getElementById('imgPreviewWrap').classList.remove('show');
+  document.getElementById('imgDropZone').style.display = '';
+  document.getElementById('imgUrlInput').value = '';
+}
+
+function handleFileUpload(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => setImagePreview(ev.target.result);
+  reader.readAsDataURL(file);
+  e.target.value = ''; // reset so same file can be re-selected
+}
+
+function loadFromUrl(){
+  const url = document.getElementById('imgUrlInput').value.trim();
+  if(!url) return;
+  setImagePreview(url);
+}
+
+// Drag-and-drop on the drop zone
+function initDropZone(){
+  const zone = document.getElementById('imgDropZone');
+  zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', ()=>zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e=>{
+    e.preventDefault(); zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if(file && file.type.startsWith('image/')){
+      const reader = new FileReader();
+      reader.onload = ev => setImagePreview(ev.target.result);
+      reader.readAsDataURL(file);
+    }
+  });
+}
+initDropZone();
+
+// Allow Enter on URL input
+document.getElementById('imgUrlInput').addEventListener('keydown', e=>{ if(e.key==='Enter') loadFromUrl(); });
+
+/* ── Editor ─────────────────────────────────────────────────────── */
+function openEditor(id){
+  editingId = id || null;
+  const isEdit = editingId !== null;
+  const card = isEdit ? cards.find(c=>c.id===editingId) : null;
+
+  document.getElementById('editorTitle').textContent = isEdit ? '✎ Revise Scroll' : '✦ Inscribe New Scroll';
+  document.getElementById('edSaveBtn').innerHTML     = isEdit ? '✦ Re-seal Scroll' : '✦ Seal &amp; Pin';
+
+  document.getElementById('edTitle').value   = card ? card.title   : '';
+  document.getElementById('edTag').value     = card ? card.tag     : '';
+  document.getElementById('edContent').value = card ? card.content : '';
+  document.getElementById('edColor').value   = card ? card.color   : 'theme-cyan';
+
+  // Image
+  if(card && card.image){ setImagePreview(card.image); }
+  else { clearImage(); }
+
+  document.getElementById('editorOverlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  setTimeout(()=>document.getElementById('edTitle').focus(),80);
+}
+
+function editFromModal(){
+  closeOverlay();
+  openEditor(openCardId);
+}
+
+function closeEditor(){ document.getElementById('editorOverlay').classList.remove('open'); document.body.style.overflow=''; editingId=null; clearImage(); }
+function closeEditorModal(e){ if(e.target===document.getElementById('editorOverlay')) closeEditor(); }
+
+function saveCard(){
+  const title   = document.getElementById('edTitle').value.trim()   || 'Untitled Scroll';
+  const tag     = document.getElementById('edTag').value.trim()     || '#unknown';
+  const color   = document.getElementById('edColor').value;
+  const content = document.getElementById('edContent').value.trim() || '*This scroll was left empty.*';
+  const image   = currentImage || null;
+
+  if(editingId !== null){
+    const idx = cards.findIndex(c=>c.id===editingId);
+    if(idx !== -1) cards[idx] = { ...cards[idx], title, tag, color, content, image };
+  } else {
+    cards.push({id:nextId++, title, tag, color, content, image});
+  }
+
+  save();
+  if(activeTag!=='all' && activeTag!==tag) activeTag='all';
+  renderCards();
+  closeEditor();
+}
+
+/* ── Export ──────────────────────────────────────────────────────── */
+function exportJSON(){
+  const payload = { version: 1, exported: new Date().toISOString(), cards };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10);
+  a.href     = url;
+  a.download = `grimoire-${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* ── Import ──────────────────────────────────────────────────────── */
+let importData    = null;   // parsed cards from file
+let importMode    = 'merge'; // 'merge' | 'replace'
+
+function openImport(){
+  importData = null;
+  importMode = 'merge';
+  document.getElementById('importStatus').textContent = '';
+  document.getElementById('importStatus').className   = 'import-status';
+  document.getElementById('importFileInput').value    = '';
+  setImportMode('merge');
+  setImportReady(false);
+  document.getElementById('importOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeImport(){
+  document.getElementById('importOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  importData = null;
+}
+function closeImportModal(e){
+  if(e.target === document.getElementById('importOverlay')) closeImport();
+}
+
+function setImportMode(mode){
+  importMode = mode;
+  document.getElementById('modeMerge').classList.toggle('selected',   mode==='merge');
+  document.getElementById('modeReplace').classList.toggle('selected', mode==='replace');
+}
+
+function setImportReady(ready){
+  const btn = document.getElementById('importConfirmBtn');
+  btn.disabled = !ready;
+  btn.style.opacity = ready ? '1' : '0.4';
+  btn.style.cursor  = ready ? 'pointer' : 'not-allowed';
+}
+
+function handleImportFile(e){
+  const file = e.target.files[0];
+  if(!file) return;
+  readImportFile(file);
+  e.target.value = '';
+}
+
+function readImportFile(file){
+  const status = document.getElementById('importStatus');
+  if(!file.name.endsWith('.json') && file.type !== 'application/json'){
+    status.textContent = '✕ Not a JSON file — please choose a grimoire export.';
+    status.className = 'import-status err';
+    setImportReady(false); return;
+  }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const parsed = JSON.parse(ev.target.result);
+      // Accept either a grimoire export object or a raw array
+      const incoming = Array.isArray(parsed) ? parsed : parsed.cards;
+      if(!Array.isArray(incoming) || !incoming.length){
+        throw new Error('No cards found');
+      }
+      // Light validation
+      incoming.forEach(c => { if(typeof c.title !== 'string') throw new Error('Invalid card shape'); });
+      importData = incoming;
+      status.textContent = `✦ ${incoming.length} scroll${incoming.length!==1?'s':''} ready to bind.`;
+      status.className = 'import-status ok';
+      setImportReady(true);
+    } catch(err) {
+      importData = null;
+      status.textContent = '✕ Could not read file — make sure it is a Grimoire export.';
+      status.className = 'import-status err';
+      setImportReady(false);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function confirmImport(){
+  if(!importData) return;
+  if(importMode === 'replace'){
+    cards = importData.map((c,i) => ({ ...c, id: i+1 }));
+    nextId = cards.length + 1;
+  } else {
+    // Merge: add incoming cards, skip ones with duplicate titles
+    const existingTitles = new Set(cards.map(c=>c.title.toLowerCase()));
+    const fresh = importData.filter(c => !existingTitles.has(c.title.toLowerCase()));
+    fresh.forEach(c => { c.id = nextId++; });
+    cards = [...cards, ...fresh];
+  }
+  activeTag = 'all';
+  save();
+  renderCards();
+  closeImport();
+}
+
+// Drag-and-drop on import zone
+(function(){
+  const zone = document.getElementById('importDropZone');
+  zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.classList.add('drag-over'); });
+  zone.addEventListener('dragleave', ()=>zone.classList.remove('drag-over'));
+  zone.addEventListener('drop', e=>{
+    e.preventDefault(); zone.classList.remove('drag-over');
+    const file = e.dataTransfer.files[0];
+    if(file) readImportFile(file);
+  });
+})();
+
+/* ── Keyboard ───────────────────────────────────────────────────── */
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape'){ closeOverlay(); closeEditor(); closeImport(); }
+});
+
+renderCards();
+</script>
+</body>
+</html>
