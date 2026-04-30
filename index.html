@@ -819,6 +819,115 @@ header {
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(201,164,85,0.2); border-radius: 2px; }
+
+/* ── SEARCH ─────────────────────────────────────────────────────── */
+.search-row { display:flex; justify-content:center; margin-bottom:18px; }
+.search-input {
+  width:100%; max-width:480px;
+  padding:9px 16px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(201,164,85,0.18);
+  border-radius:2px;
+  font-family:'IM Fell English',serif; font-style:italic; font-size:0.88rem;
+  color:var(--parchment); outline:none; text-align:center;
+  transition:border-color 0.2s, box-shadow 0.2s;
+}
+.search-input:focus { border-color:rgba(201,164,85,0.45); box-shadow:0 0 12px rgba(201,164,85,0.08); }
+.search-input::placeholder { color:rgba(201,164,85,0.28); }
+
+/* ── SORT ────────────────────────────────────────────────────────── */
+.sort-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-top:14px; }
+.sort-label { font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.18em; color:rgba(201,164,85,0.28); text-transform:uppercase; }
+.sort-bar { display:flex; gap:6px; }
+.sort-pill {
+  padding:4px 12px; border-radius:2px;
+  border:1px solid rgba(201,164,85,0.15); background:transparent;
+  font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.08em;
+  color:rgba(201,164,85,0.38); cursor:pointer; transition:all 0.2s;
+}
+.sort-pill:hover { border-color:rgba(201,164,85,0.4); color:var(--gold); }
+.sort-pill.active { background:rgba(201,164,85,0.08); border-color:rgba(201,164,85,0.45); color:var(--gold); }
+
+/* ── STORAGE WARNING ────────────────────────────────────────────── */
+.storage-warning {
+  max-width:1200px; margin:0 auto 20px;
+  padding:10px 20px;
+  background:rgba(224,123,48,0.08); border:1px solid rgba(224,123,48,0.25); border-radius:2px;
+  font-family:'IM Fell English',serif; font-style:italic; font-size:0.82rem;
+  color:var(--ember); text-align:center; display:none;
+}
+
+/* ── CONFIRM DELETE ─────────────────────────────────────────────── */
+.confirm-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(5,5,15,0.88); backdrop-filter:blur(8px);
+  z-index:4000; align-items:center; justify-content:center; padding:24px;
+}
+.confirm-overlay.open { display:flex; }
+.confirm-card {
+  background:var(--midnight); border:1px solid rgba(201,164,85,0.2); border-radius:2px;
+  max-width:380px; width:100%;
+  box-shadow:0 24px 80px rgba(0,0,0,0.7),0 0 40px rgba(201,164,85,0.08);
+  animation:revealScroll 0.3s cubic-bezier(0.22,1,0.36,1); overflow:hidden;
+}
+.confirm-body { padding:32px 28px 22px; text-align:center; display:flex; flex-direction:column; gap:6px; }
+.confirm-glyph { font-size:1.6rem; color:rgba(180,50,50,0.55); margin-bottom:2px; }
+.confirm-title { font-family:'Cinzel',serif; font-size:0.88rem; letter-spacing:0.1em; color:var(--parchment); }
+.confirm-sub { font-family:'IM Fell English',serif; font-style:italic; font-size:0.9rem; color:var(--gold); }
+.confirm-note { font-family:'IM Fell English',serif; font-style:italic; font-size:0.78rem; color:rgba(201,164,85,0.3); margin-top:4px; }
+.confirm-actions { display:flex; justify-content:center; gap:10px; padding:14px 24px 18px; border-top:1px solid rgba(201,164,85,0.1); }
+.btn-delete {
+  padding:9px 22px;
+  background:rgba(160,40,40,0.1); border:1px solid rgba(160,40,40,0.3); border-radius:1px;
+  font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.12em; color:#c06060;
+  cursor:pointer; transition:all 0.2s;
+}
+.btn-delete:hover { background:rgba(160,40,40,0.2); border-color:rgba(160,40,40,0.5); }
+
+/* ── TIMESTAMPS ─────────────────────────────────────────────────── */
+.card-date { font-family:'Cinzel',serif; font-size:0.58rem; letter-spacing:0.06em; color:rgba(80,50,10,0.3); }
+.modal-meta {
+  font-family:'IM Fell English',serif; font-style:italic; font-size:0.78rem;
+  color:rgba(80,50,10,0.38); text-align:center; padding:10px 32px 0; letter-spacing:0.04em;
+}
+
+/* ── CLOUD SYNC MODAL ───────────────────────────────────────────── */
+.sync-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(5,5,15,0.88); backdrop-filter:blur(8px);
+  z-index:3500; align-items:center; justify-content:center; padding:24px;
+}
+.sync-overlay.open { display:flex; }
+.sync-card {
+  background:var(--midnight); border:1px solid rgba(201,164,85,0.2); border-radius:2px;
+  max-width:500px; width:100%;
+  box-shadow:0 24px 80px rgba(0,0,0,0.7),0 0 40px rgba(201,164,85,0.08);
+  animation:revealScroll 0.35s cubic-bezier(0.22,1,0.36,1); overflow:hidden;
+}
+.sync-header {
+  padding:18px 24px;
+  background:linear-gradient(to right,rgba(201,164,85,0.06),transparent);
+  border-bottom:1px solid rgba(201,164,85,0.12);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.sync-header h2 { font-family:'Cinzel',serif; font-size:0.85rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; }
+.sync-header button { background:none; border:none; color:rgba(201,164,85,0.4); cursor:pointer; font-size:1.1rem; transition:color 0.2s; }
+.sync-header button:hover { color:var(--gold); }
+.sync-body { padding:20px 24px; display:flex; flex-direction:column; gap:14px; }
+.sync-body label { font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(201,164,85,0.5); display:block; margin-bottom:5px; }
+.sync-body input { width:100%; padding:9px 13px; background:rgba(255,255,255,0.04); border:1px solid rgba(201,164,85,0.15); border-radius:1px; font-family:'IM Fell English',serif; font-size:0.9rem; color:var(--parchment); outline:none; transition:border-color 0.2s; }
+.sync-body input:focus { border-color:rgba(201,164,85,0.45); }
+.sync-body input::placeholder { color:rgba(201,164,85,0.3); }
+.sync-hint { font-family:'IM Fell English',serif; font-style:italic; font-size:0.75rem; color:rgba(201,164,85,0.3); line-height:1.5; }
+.sync-status { font-family:'IM Fell English',serif; font-style:italic; font-size:0.82rem; text-align:center; min-height:1.2em; transition:color 0.2s; }
+.sync-status.ok  { color:var(--sage); }
+.sync-status.err { color:var(--rose); }
+.sync-actions { padding:14px 24px 18px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid rgba(201,164,85,0.1); }
+.btn-pull { padding:9px 20px; background:rgba(93,228,212,0.06); border:1px solid rgba(93,228,212,0.25); border-radius:1px; font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.12em; color:#5de4d4; cursor:pointer; transition:all 0.2s; }
+.btn-pull:hover { background:rgba(93,228,212,0.12); }
+.btn-push { padding:9px 20px; background:linear-gradient(135deg,rgba(201,164,85,0.18),rgba(201,164,85,0.08)); border:1px solid rgba(201,164,85,0.4); border-radius:1px; font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.12em; color:var(--gold-pale); cursor:pointer; transition:all 0.2s; }
+.btn-push:hover { background:linear-gradient(135deg,rgba(201,164,85,0.28),rgba(201,164,85,0.14)); box-shadow:0 0 20px rgba(201,164,85,0.2); }
+.data-btn[href] { text-decoration:none; }
 </style>
 </head>
 <body>
@@ -840,14 +949,33 @@ header {
       <button class="data-btn" onclick="exportJSON()">⬇ Export Scrolls</button>
       <div class="data-toolbar-sep"></div>
       <button class="data-btn" onclick="openImport()">⬆ Import Scrolls</button>
+      <div class="data-toolbar-sep"></div>
+      <button class="data-btn" onclick="openSync()">☁ Cloud Sync</button>
+      <div class="data-toolbar-sep"></div>
+      <a class="data-btn" href="spreads.html">✦ Spread Compendium</a>
     </div>
   </header>
 
   <div class="filter-section">
+    <div class="search-row">
+      <input type="text" id="searchInput" class="search-input"
+             placeholder="✦  search scrolls by title or content…"
+             oninput="setSearch(this.value)"/>
+    </div>
     <div class="filter-label">Filter by Sigil</div>
     <div class="filter-bar" id="filterBar"></div>
+    <div class="sort-row">
+      <span class="sort-label">Order</span>
+      <div class="sort-bar">
+        <button class="sort-pill active" id="sort-newest" onclick="setSort('newest')">Newest</button>
+        <button class="sort-pill" id="sort-oldest" onclick="setSort('oldest')">Oldest</button>
+        <button class="sort-pill" id="sort-az" onclick="setSort('az')">A–Z</button>
+        <button class="sort-pill" id="sort-za" onclick="setSort('za')">Z–A</button>
+      </div>
+    </div>
   </div>
 
+  <div class="storage-warning" id="storageWarning"></div>
   <div class="cards-grid" id="cardsGrid"></div>
 </div>
 
@@ -859,6 +987,7 @@ header {
       <img id="modalFeaturedImg" class="modal-featured-img" src="" alt="" style="display:none"/>
       <button class="modal-edit-btn" id="modalEditBtn" onclick="editFromModal()">✎ Revise</button>
       <button class="modal-close" onclick="closeOverlay()">✕</button>
+      <div class="modal-meta" id="modalMeta"></div>
       <div class="modal-body"><div class="md-body" id="modalBody"></div></div>
     </div>
   </div>
@@ -959,6 +1088,56 @@ header {
   </div>
 </div>
 
+<!-- Cloud Sync Overlay -->
+<div class="sync-overlay" id="syncOverlay" onclick="closeSyncModal(event)">
+  <div class="sync-card" onclick="event.stopPropagation()">
+    <div class="sync-header">
+      <h2>☁ Cloud Sync — GitHub Gist</h2>
+      <button onclick="closeSync()">✕</button>
+    </div>
+    <div class="sync-body">
+      <div>
+        <label>Personal Access Token <span style="font-weight:400;text-transform:none;font-family:'IM Fell English',serif;font-style:italic;color:rgba(201,164,85,0.35)">(gist scope)</span></label>
+        <input type="password" id="syncToken" placeholder="ghp_…" autocomplete="off"/>
+      </div>
+      <div>
+        <label>Gist ID <span style="font-weight:400;text-transform:none;font-family:'IM Fell English',serif;font-style:italic;color:rgba(201,164,85,0.35)">(auto-filled after first push)</span></label>
+        <input type="text" id="syncGistId" placeholder="leave blank to create a new gist"/>
+      </div>
+      <div>
+        <label>Pull Mode</label>
+        <div class="import-mode-row">
+          <button class="import-mode-btn selected" id="syncMerge" onclick="setSyncMode('merge')">✦ Merge — keep existing + add new</button>
+          <button class="import-mode-btn" id="syncReplace" onclick="setSyncMode('replace')">⊛ Replace — overwrite everything</button>
+        </div>
+      </div>
+      <div class="sync-status" id="syncStatus"></div>
+      <p class="sync-hint">Your token is stored only in this browser's localStorage and never sent anywhere except api.github.com. Create a token at GitHub → Settings → Developer Settings → Personal Access Tokens → Fine-grained, with Gists read/write permission.</p>
+    </div>
+    <div class="sync-actions">
+      <button class="btn-cancel" onclick="closeSync()">Close</button>
+      <button class="btn-pull" onclick="pullFromGist()">↓ Pull from Gist</button>
+      <button class="btn-push" onclick="pushToGist()">↑ Push to Gist</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete Overlay -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-card">
+    <div class="confirm-body">
+      <div class="confirm-glyph">✕</div>
+      <div class="confirm-title">Banish this scroll?</div>
+      <div class="confirm-sub" id="confirmCardTitle"></div>
+      <div class="confirm-note">This cannot be undone.</div>
+    </div>
+    <div class="confirm-actions">
+      <button class="btn-cancel" onclick="cancelDelete()">Keep</button>
+      <button class="btn-delete" onclick="confirmDelete()">✕ Banish</button>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ── Starfield ─────────────────────────────────────────────────── */
 (function(){
@@ -988,17 +1167,17 @@ const themeColors = {
 
 /* ── Sample Data ────────────────────────────────────────────────── */
 const sampleCards = [
-  { id:1, title:"The First Inscription", tag:"#guide", color:"theme-gold",
+  { id:1, title:"The First Inscription", tag:"#guide", color:"theme-gold", createdAt:"2025-01-06T13:00:00.000Z",
     content:`# The First Inscription\n\nWelcome, seeker. This is **The Grimoire** — a place to bind your knowledge into scrolls.\n\n## What You May Do\n- Write notes in **Markdown**\n- Filter cards by their sigil tag below the header\n- Click any scroll to read the full text\n- Inscribe new scrolls with the button above\n\n## Markdown is Supported\n\`**bold**\`, *italic*, \`# headings\`, lists, code blocks, and blockquotes.\n\n> *All knowledge begins with a single inscription.*` },
-  { id:2, title:"Arcane Project Ideas", tag:"#arcana", color:"theme-violet",
+  { id:2, title:"Arcane Project Ideas", tag:"#arcana", color:"theme-violet", createdAt:"2025-01-05T14:00:00.000Z",
     content:`# Arcane Project Ideas 🜁\n\nThings to conjure into existence.\n\n## Web Grimoires\n- **This very scroll** — notecards that render markdown\n- A potion recipe manager with ingredient tagging\n- An offline-first dream journal\n\n## Esoteric Learning\n1. WebAssembly rituals\n2. Functional CSS alchemy\n3. The art of offline-first spellcraft\n\n> *"The cosmos is full of knowledge waiting to be named."*` },
-  { id:3, title:"Sourdough Ritual", tag:"#recipes", color:"theme-ember",
+  { id:3, title:"Sourdough Ritual", tag:"#recipes", color:"theme-ember", createdAt:"2025-01-04T09:00:00.000Z",
     content:`# Sourdough Bread 🍞\n\n*An overnight binding ritual.*\n\n## Ingredients\n- 450g bread flour\n- 325g water (75°F)\n- 90g active starter\n- 9g salt\n\n## Method\n**1. Mix** — Combine flour and water, rest 30 min.\n**2. Bind** — Fold in starter and salt. Stretch & fold 4× over 2 hrs.\n**3. Shape** — Form a boule. Refrigerate overnight.\n**4. Conjure** — Dutch oven 500°F: 20 min covered, 25 min uncovered.\n\n*Score deeply before baking for the best bloom.*` },
-  { id:4, title:"Tomes of Wisdom", tag:"#books", color:"theme-cyan",
+  { id:4, title:"Tomes of Wisdom", tag:"#books", color:"theme-cyan", createdAt:"2025-01-03T11:00:00.000Z",
     content:`# Tomes of Wisdom\n\n## Thinking, Fast and Slow — Kahneman\n\n- **System 1** — swift, instinctive, emotional\n- **System 2** — slow, deliberate, rational\n\nThe illusion: we believe we think deliberately far more than we do.\n\n---\n\n## Atomic Habits — Clear\n\n> *"You do not rise to the level of your goals. You fall to the level of your systems."*\n\n1. Make it obvious\n2. Make it attractive\n3. Make it easy\n4. Make it satisfying` },
-  { id:5, title:"Weekly Ritual Checklist", tag:"#rituals", color:"theme-rose",
+  { id:5, title:"Weekly Ritual Checklist", tag:"#rituals", color:"theme-rose", createdAt:"2025-01-02T16:00:00.000Z",
     content:`# Weekly Review ✦\n\n## Completed Rites\n- [x] Shipped the grimoire prototype\n- [x] Reviewed the tome of PRs\n- [x] Communed with family\n\n## In Progress\n- [ ] Inscribe unit test scrolls\n- [ ] Update the design token grimoire\n- [ ] Plan the Q3 vision ritual\n\n## Next Week's Focus\n1. Performance augury\n2. Onboarding flow enchantment\n3. Team retrospective circle` },
-  { id:6, title:"Markdown Spellbook", tag:"#guide", color:"theme-sage",
+  { id:6, title:"Markdown Spellbook", tag:"#guide", color:"theme-sage", createdAt:"2025-01-01T10:00:00.000Z",
     content:`# Markdown Spellbook\n\nAll formatting runes at your disposal.\n\n## Text Enchantments\n**Bold**, *italic*, ~~crossed out~~, \`inline rune\`\n\n## Code Ritual\n\`\`\`js\nconst summon = name => \`Arise, \${name}!\`;\n\`\`\`\n\n## The Wise Say\n> *Less is more — unless the spell demands more.*\n\n## Nested Scrolls\n- Portals to knowledge\n  - Inner rite one\n  - Inner rite two\n\n---\n*Tables and images shall come in the next age.*` },
 ];
 
@@ -1006,10 +1185,41 @@ const sampleCards = [
 let cards = JSON.parse(localStorage.getItem('grimoire_v2') || 'null') || sampleCards;
 let nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
 let activeTag = 'all';
-let editingId = null;   // null = new card, number = editing existing
-let openCardId = null;  // track which card is open in read modal
+let editingId = null;
+let openCardId = null;
+let searchQuery = '';
+let sortOrder   = 'newest';
+let pendingDeleteId = null;
+const mdCache   = new Map();
 
-function save(){ try{ localStorage.setItem('grimoire_v2', JSON.stringify(cards)); }catch(e){} }
+function save(){
+  try{ localStorage.setItem('grimoire_v2', JSON.stringify(cards)); }catch(e){}
+  checkStorage();
+}
+
+function checkStorage(){
+  try{
+    const raw = localStorage.getItem('grimoire_v2')||'';
+    const kb  = Math.round(raw.length * 2 / 1024);
+    const el  = document.getElementById('storageWarning');
+    if(kb > 3500){
+      el.style.display = '';
+      el.textContent   = `⚠ Grimoire is using ~${kb}KB of localStorage (~5MB limit). Export your scrolls to avoid data loss.`;
+    } else {
+      el.style.display = 'none';
+    }
+  }catch(e){}
+}
+
+function formatDate(iso){
+  return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+}
+
+function renderMd(card){
+  if(!mdCache.has(card.id)) mdCache.set(card.id, marked.parse(card.content));
+  return mdCache.get(card.id);
+}
+
 function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 /* ── Filter ─────────────────────────────────────────────────────── */
@@ -1026,22 +1236,58 @@ function renderFilters(){
 
 function setFilter(tag){
   activeTag = tag;
-  renderFilters();
-  document.querySelectorAll('.card-outer').forEach(el=>{
-    el.classList.toggle('hidden', tag!=='all' && el.dataset.tag !== tag);
+  renderCards();
+}
+
+function setSearch(q){
+  searchQuery = q;
+  renderCards();
+}
+
+function setSort(order){
+  sortOrder = order;
+  ['newest','oldest','az','za'].forEach(o=>{
+    document.getElementById(`sort-${o}`).classList.toggle('active', o===order);
   });
+  renderCards();
+}
+
+function getVisibleCards(){
+  let result = cards.slice();
+  if(activeTag !== 'all') result = result.filter(c=>c.tag===activeTag);
+  if(searchQuery){
+    const q = searchQuery.toLowerCase();
+    result = result.filter(c=>
+      c.title.toLowerCase().includes(q) || c.content.toLowerCase().includes(q)
+    );
+  }
+  result.sort((a,b)=>{
+    if(sortOrder==='az')     return a.title.localeCompare(b.title);
+    if(sortOrder==='za')     return b.title.localeCompare(a.title);
+    if(sortOrder==='oldest') return (a.createdAt||'') < (b.createdAt||'') ? -1 : 1;
+    return (a.createdAt||'') > (b.createdAt||'') ? -1 : 1;
+  });
+  return result;
 }
 
 /* ── Render ─────────────────────────────────────────────────────── */
 function renderCards(){
-  const grid = document.getElementById('cardsGrid');
+  const grid    = document.getElementById('cardsGrid');
+  const visible = getVisibleCards();
+
   if(!cards.length){
-    grid.innerHTML='<div class="empty-state"><p>No scrolls yet — inscribe the first one.</p></div>';
+    grid.innerHTML = '<div class="empty-state"><p>No scrolls yet — inscribe the first one.</p></div>';
     renderFilters(); return;
   }
-  grid.innerHTML = cards.map((card,i)=>{
-    const g = glyphs[card.color]||glyphs['theme-gold'];
+  if(!visible.length){
+    grid.innerHTML = '<div class="empty-state"><p>No scrolls match — try a different search or filter.</p></div>';
+    renderFilters(); return;
+  }
+
+  grid.innerHTML = visible.map((card,i)=>{
+    const g      = glyphs[card.color]||glyphs['theme-gold'];
     const hasImg = !!card.image;
+    const dateEl = card.createdAt ? `<span class="card-date">${formatDate(card.createdAt)}</span>` : '';
     return `
     <div class="card-outer ${esc(card.color)}${hasImg?' card-has-image':''}" data-tag="${esc(card.tag)}"
          style="animation-delay:${i*0.06}s">
@@ -1054,7 +1300,10 @@ function renderCards(){
         </div>
         <div class="card-footer">
           <span class="card-tag">${esc(card.tag)}</span>
-          <span class="card-open">open scroll →</span>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+            ${dateEl}
+            <span class="card-open">open scroll →</span>
+          </div>
         </div>
       </div>
       <div class="card-actions">
@@ -1064,18 +1313,12 @@ function renderCards(){
     </div>`;
   }).join('');
 
-  cards.forEach(card=>{
+  visible.forEach(card=>{
     const el = document.getElementById(`prev-${card.id}`);
-    if(el) el.innerHTML = marked.parse(card.content);
+    if(el) el.innerHTML = renderMd(card);
   });
 
   renderFilters();
-  // re-apply active filter
-  if(activeTag !== 'all'){
-    document.querySelectorAll('.card-outer').forEach(el=>{
-      el.classList.toggle('hidden', el.dataset.tag !== activeTag);
-    });
-  }
 }
 
 /* ── Open card ──────────────────────────────────────────────────── */
@@ -1091,7 +1334,13 @@ function openCard(id){
   const mfi = document.getElementById('modalFeaturedImg');
   if(card.image){ mfi.src=card.image; mfi.style.display='block'; }
   else { mfi.style.display='none'; mfi.src=''; }
-  document.getElementById('modalBody').innerHTML = marked.parse(card.content);
+  const meta  = document.getElementById('modalMeta');
+  const parts = [];
+  if(card.createdAt) parts.push(`Inscribed ${formatDate(card.createdAt)}`);
+  if(card.updatedAt) parts.push(`Revised ${formatDate(card.updatedAt)}`);
+  meta.textContent = parts.join(' · ');
+
+  document.getElementById('modalBody').innerHTML = renderMd(card);
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
@@ -1100,9 +1349,29 @@ function closeModal(e){ if(e.target===document.getElementById('overlay')) closeO
 
 /* ── Delete ─────────────────────────────────────────────────────── */
 function deleteCard(id){
-  cards = cards.filter(c=>c.id!==id);
+  const card = cards.find(c=>c.id===id);
+  if(!card) return;
+  pendingDeleteId = id;
+  document.getElementById('confirmCardTitle').textContent = `"${card.title}"`;
+  document.getElementById('confirmOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function confirmDelete(){
+  if(pendingDeleteId===null) return;
+  cards = cards.filter(c=>c.id!==pendingDeleteId);
+  mdCache.delete(pendingDeleteId);
+  pendingDeleteId = null;
+  document.getElementById('confirmOverlay').classList.remove('open');
+  document.body.style.overflow = '';
   save();
   renderCards();
+}
+
+function cancelDelete(){
+  pendingDeleteId = null;
+  document.getElementById('confirmOverlay').classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 /* ── Image helpers ──────────────────────────────────────────────── */
@@ -1197,11 +1466,15 @@ function saveCard(){
   const content = document.getElementById('edContent').value.trim() || '*This scroll was left empty.*';
   const image   = currentImage || null;
 
+  const now = new Date().toISOString();
   if(editingId !== null){
     const idx = cards.findIndex(c=>c.id===editingId);
-    if(idx !== -1) cards[idx] = { ...cards[idx], title, tag, color, content, image };
+    if(idx !== -1){
+      cards[idx] = { ...cards[idx], title, tag, color, content, image, updatedAt: now };
+      mdCache.delete(editingId);
+    }
   } else {
-    cards.push({id:nextId++, title, tag, color, content, image});
+    cards.push({id:nextId++, title, tag, color, content, image, createdAt: now});
   }
 
   save();
@@ -1330,12 +1603,128 @@ function confirmImport(){
   });
 })();
 
+/* ── Cloud Sync (GitHub Gist) ───────────────────────────────────── */
+const GIST_FILE    = 'grimoire.json';
+const KEY_TOKEN    = 'grimoire_gh_token';
+const KEY_GIST     = 'grimoire_gh_gist';
+let syncMode       = 'merge';
+
+function openSync(){
+  document.getElementById('syncToken').value  = localStorage.getItem(KEY_TOKEN) || '';
+  document.getElementById('syncGistId').value = localStorage.getItem(KEY_GIST)  || '';
+  setSyncStatus('','');
+  setSyncMode('merge');
+  document.getElementById('syncOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSync(){
+  // persist token + gist id whenever the modal is closed
+  const tok = document.getElementById('syncToken').value.trim();
+  const gid = document.getElementById('syncGistId').value.trim();
+  if(tok) localStorage.setItem(KEY_TOKEN, tok); else localStorage.removeItem(KEY_TOKEN);
+  if(gid) localStorage.setItem(KEY_GIST,  gid); else localStorage.removeItem(KEY_GIST);
+  document.getElementById('syncOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeSyncModal(e){ if(e.target===document.getElementById('syncOverlay')) closeSync(); }
+
+function setSyncMode(m){
+  syncMode = m;
+  document.getElementById('syncMerge').classList.toggle('selected',   m==='merge');
+  document.getElementById('syncReplace').classList.toggle('selected', m==='replace');
+}
+function setSyncStatus(msg, cls){
+  const el = document.getElementById('syncStatus');
+  el.textContent = msg;
+  el.className = 'sync-status' + (cls ? ' '+cls : '');
+}
+
+async function pushToGist(){
+  const token  = document.getElementById('syncToken').value.trim();
+  const gistId = document.getElementById('syncGistId').value.trim() || localStorage.getItem(KEY_GIST);
+  if(!token){ setSyncStatus('✕ Enter a GitHub token first.','err'); return; }
+
+  setSyncStatus('Binding scrolls to the cloud…','');
+  const body = {
+    description: 'The Grimoire — scroll vault',
+    public: false,
+    files: { [GIST_FILE]: { content: JSON.stringify({ version:1, exported:new Date().toISOString(), cards }, null, 2) } }
+  };
+  try{
+    const url  = gistId ? `https://api.github.com/gists/${gistId}` : 'https://api.github.com/gists';
+    const resp = await fetch(url, {
+      method: gistId ? 'PATCH' : 'POST',
+      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if(!resp.ok) throw new Error(`GitHub returned ${resp.status}`);
+    const data = await resp.json();
+    localStorage.setItem(KEY_TOKEN, token);
+    localStorage.setItem(KEY_GIST,  data.id);
+    document.getElementById('syncGistId').value = data.id;
+    setSyncStatus(`✦ ${cards.length} scroll${cards.length!==1?'s':''} pushed. Gist: ${data.id}`, 'ok');
+  }catch(e){
+    setSyncStatus(`✕ Push failed — ${e.message}`, 'err');
+  }
+}
+
+async function pullFromGist(){
+  const token  = document.getElementById('syncToken').value.trim();
+  const gistId = document.getElementById('syncGistId').value.trim() || localStorage.getItem(KEY_GIST);
+  if(!token)  { setSyncStatus('✕ Enter a GitHub token first.','err'); return; }
+  if(!gistId) { setSyncStatus('✕ Enter a Gist ID (or push first to create one).','err'); return; }
+
+  setSyncStatus('Drawing scrolls from the ether…','');
+  try{
+    const resp = await fetch(`https://api.github.com/gists/${gistId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if(!resp.ok) throw new Error(`GitHub returned ${resp.status}`);
+    const data = await resp.json();
+    const file = data.files[GIST_FILE];
+    if(!file) throw new Error(`No ${GIST_FILE} found in this Gist`);
+    const parsed   = JSON.parse(file.content);
+    const incoming = Array.isArray(parsed) ? parsed : parsed.cards;
+    if(!Array.isArray(incoming)) throw new Error('Unrecognised format');
+
+    localStorage.setItem(KEY_TOKEN, token);
+    localStorage.setItem(KEY_GIST,  gistId);
+
+    if(syncMode === 'replace'){
+      cards  = incoming.map((c,i)=>({ ...c, id: i+1 }));
+      nextId = cards.length + 1;
+    } else {
+      const existing = new Set(cards.map(c=>c.title.toLowerCase()));
+      const fresh    = incoming.filter(c=>!existing.has(c.title.toLowerCase()));
+      fresh.forEach(c=>{ c.id = nextId++; });
+      cards = [...cards, ...fresh];
+    }
+    // migrate timestamps on pulled cards
+    cards.forEach(c=>{ if(!c.createdAt) c.createdAt = new Date().toISOString(); });
+    mdCache.clear();
+    activeTag = 'all';
+    save();
+    renderCards();
+    setSyncStatus(`✦ Pulled ${incoming.length} scroll${incoming.length!==1?'s':''}. Local collection updated.`, 'ok');
+  }catch(e){
+    setSyncStatus(`✕ Pull failed — ${e.message}`, 'err');
+  }
+}
+
 /* ── Keyboard ───────────────────────────────────────────────────── */
 document.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){ closeOverlay(); closeEditor(); closeImport(); }
+  if(e.key==='Escape'){ closeOverlay(); closeEditor(); closeImport(); cancelDelete(); closeSync(); }
 });
 
+// Migrate: assign createdAt to cards that predate this feature
+(function(){
+  let changed = false;
+  cards.forEach(c=>{ if(!c.createdAt){ c.createdAt = new Date().toISOString(); changed=true; } });
+  if(changed) save();
+})();
+
 renderCards();
+checkStorage();
 </script>
 </body>
 </html>

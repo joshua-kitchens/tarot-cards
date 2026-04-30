@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Spread Compendium — The Grimoire</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&family=Uncial+Antiqua&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --void:      #07080f;
+  --deep:      #0d0f1c;
+  --midnight:  #13152a;
+  --veil:      #1c1f3a;
+  --gold:      #c9a455;
+  --gold-pale: #e8d48a;
+  --gold-dim:  #7a5f2a;
+  --parchment: #f0e6c8;
+  --parchment-dark: #d9c9a3;
+  --ink:       #1e1408;
+  --ink-soft:  #4a3520;
+  --cyan-glow: #5de4d4;
+  --violet:    #8b5cf6;
+  --rose:      #d97b8a;
+  --ember:     #e07b30;
+  --sage:      #5aaa80;
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'IM Fell English', serif;
+  background: var(--void);
+  color: var(--parchment);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: crosshair;
+}
+
+/* ── STARFIELD ─────────────────────────────────────────────────── */
+#starfield { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.star { position:absolute; border-radius:50%; background:white; animation:twinkle var(--dur) ease-in-out infinite; opacity:0; }
+@keyframes twinkle { 0%,100%{opacity:0;transform:scale(0.6)} 50%{opacity:var(--bright);transform:scale(1)} }
+.nebula { position:fixed; border-radius:50%; filter:blur(80px); pointer-events:none; z-index:0; }
+
+/* ── LAYOUT ────────────────────────────────────────────────────── */
+.grimoire { position:relative; z-index:1; min-height:100vh; padding:0 32px 100px; max-width:1100px; margin:0 auto; }
+
+/* ── HEADER ────────────────────────────────────────────────────── */
+header { text-align:center; padding:56px 20px 48px; position:relative; }
+
+.back-link {
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:'Cinzel',serif; font-size:0.7rem; letter-spacing:0.14em;
+  color:rgba(201,164,85,0.45); text-decoration:none;
+  border:1px solid rgba(201,164,85,0.12); border-radius:2px;
+  padding:6px 14px; transition:all 0.2s; margin-bottom:32px;
+}
+.back-link:hover { color:var(--gold); border-color:rgba(201,164,85,0.4); }
+
+.sigil { font-size:2.2rem; margin-bottom:10px; animation:floatSigil 4s ease-in-out infinite; display:block; filter:drop-shadow(0 0 12px rgba(201,164,85,0.6)); }
+@keyframes floatSigil { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+
+.header-title {
+  font-family:'Cinzel Decorative',serif; font-size:clamp(1.6rem,4vw,3rem); font-weight:700;
+  background:linear-gradient(135deg,var(--gold-pale) 0%,var(--gold) 40%,#a06b20 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+  letter-spacing:0.08em; line-height:1.2; filter:drop-shadow(0 0 24px rgba(201,164,85,0.35));
+}
+.header-sub { font-family:'IM Fell English',serif; font-style:italic; font-size:0.95rem; color:rgba(201,164,85,0.5); margin-top:8px; letter-spacing:0.1em; }
+
+.divider { margin:18px auto 0; width:220px; height:1px; background:linear-gradient(to right,transparent,var(--gold),transparent); position:relative; }
+.divider::before { content:'✦'; position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); font-size:0.6rem; color:var(--gold); background:var(--void); padding:0 6px; }
+
+/* ── INTRO ────────────────────────────────────────────────────── */
+.intro {
+  text-align:center; max-width:640px; margin:0 auto 60px;
+  font-size:0.92rem; line-height:1.9; color:rgba(240,230,200,0.65);
+  font-style:italic;
+}
+
+/* ── TOC ──────────────────────────────────────────────────────── */
+.toc {
+  display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+  margin-bottom:60px;
+}
+.toc-pill {
+  padding:6px 16px; border-radius:2px;
+  border:1px solid rgba(201,164,85,0.18); background:transparent;
+  font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.1em;
+  color:rgba(201,164,85,0.5); text-decoration:none; transition:all 0.2s;
+}
+.toc-pill:hover { border-color:rgba(201,164,85,0.5); color:var(--gold); background:rgba(201,164,85,0.04); }
+
+/* ── SPREAD SECTION ────────────────────────────────────────────── */
+.spread-section {
+  margin-bottom:70px;
+  animation: manifestCard 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+@keyframes manifestCard { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.spread-header {
+  display:flex; align-items:center; gap:18px;
+  margin-bottom:28px;
+}
+.spread-header-line { flex:1; height:1px; background:linear-gradient(to right,rgba(201,164,85,0.25),transparent); }
+.spread-header-line.left { background:linear-gradient(to left,rgba(201,164,85,0.25),transparent); }
+.spread-title-wrap { text-align:center; }
+.spread-name {
+  font-family:'Cinzel',serif; font-size:1.05rem; font-weight:600;
+  color:var(--gold-pale); letter-spacing:0.1em;
+}
+.spread-cards-badge {
+  font-family:'IM Fell English',serif; font-style:italic;
+  font-size:0.78rem; color:rgba(201,164,85,0.45); margin-top:3px;
+  letter-spacing:0.06em;
+}
+
+.spread-body {
+  display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start;
+}
+@media(max-width:700px){ .spread-body{ grid-template-columns:1fr; } }
+
+.spread-desc {
+  font-size:0.88rem; line-height:1.9; color:rgba(240,230,200,0.72);
+  margin-bottom:18px;
+}
+.spread-desc strong { color:var(--gold-pale); font-weight:700; }
+.spread-desc em { color:rgba(201,164,85,0.7); }
+
+.spread-uses-label {
+  font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.18em;
+  text-transform:uppercase; color:rgba(201,164,85,0.4); margin-bottom:8px;
+}
+.spread-uses { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px; }
+.use-tag {
+  font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.08em;
+  padding:3px 10px; border:1px solid rgba(201,164,85,0.2); border-radius:1px;
+  color:rgba(201,164,85,0.5);
+}
+
+/* ── POSITION LIST ─────────────────────────────────────────────── */
+.position-list { display:flex; flex-direction:column; gap:0; }
+.position-item {
+  display:flex; gap:12px; align-items:flex-start;
+  padding:10px 0; border-bottom:1px solid rgba(201,164,85,0.07);
+}
+.position-item:last-child { border-bottom:none; }
+.position-num {
+  width:26px; height:26px; flex-shrink:0;
+  border:1px solid rgba(201,164,85,0.3); border-radius:1px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel',serif; font-size:0.65rem; color:var(--gold);
+  background:rgba(201,164,85,0.05);
+}
+.position-info {}
+.position-name { font-family:'Cinzel',serif; font-size:0.75rem; letter-spacing:0.06em; color:var(--parchment-dark); margin-bottom:2px; }
+.position-meaning { font-size:0.8rem; color:rgba(240,230,200,0.55); line-height:1.6; font-style:italic; }
+
+/* ── DIAGRAM AREA ──────────────────────────────────────────────── */
+.diagram-wrap {
+  display:flex; flex-direction:column; align-items:center; gap:16px;
+}
+.diagram-label {
+  font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.18em;
+  text-transform:uppercase; color:rgba(201,164,85,0.35);
+}
+.diagram {
+  background:rgba(255,255,255,0.02); border:1px solid rgba(201,164,85,0.1);
+  border-radius:2px; padding:24px; display:inline-flex;
+  align-items:center; justify-content:center;
+}
+
+/* Card slot */
+.cs {
+  width:40px; height:60px; flex-shrink:0;
+  border:1px solid rgba(201,164,85,0.35); border-radius:2px;
+  background:rgba(201,164,85,0.06);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cinzel',serif; font-size:0.68rem; color:var(--gold);
+  position:relative;
+}
+.cs.sideways { width:60px; height:40px; } /* rotated card */
+
+/* Layouts */
+.d-single { gap:0; }
+.d-row { display:flex; gap:10px; }
+.d-cross {
+  display:grid;
+  grid-template-columns:50px 50px 50px;
+  grid-template-rows:70px 70px 70px;
+  gap:4px;
+}
+.d-horseshoe { display:flex; flex-direction:column; gap:8px; }
+.d-horseshoe-top { display:flex; gap:10px; justify-content:center; }
+.d-horseshoe-bot { display:flex; gap:10px; justify-content:center; }
+
+.d-celtic {
+  display:grid;
+  grid-template-columns:50px 50px 50px 20px 50px;
+  grid-template-rows:70px 70px 70px 70px;
+  gap:4px;
+}
+
+.d-year {
+  display:flex; flex-direction:column; gap:8px; align-items:center;
+}
+.d-year-months { display:grid; grid-template-columns:repeat(4,50px); gap:6px; }
+.d-year-theme { margin-top:4px; }
+
+.d-rel {
+  display:grid;
+  grid-template-columns:50px 50px 50px;
+  grid-template-rows:70px 70px 70px;
+  gap:6px;
+}
+
+/* ── SCROLLBAR ─────────────────────────────────────────────────── */
+::-webkit-scrollbar { width:5px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:rgba(201,164,85,0.2); border-radius:2px; }
+</style>
+</head>
+<body>
+
+<div id="starfield">
+  <div class="nebula" style="width:600px;height:400px;top:-100px;left:-150px;background:radial-gradient(ellipse,rgba(80,40,140,0.18),transparent 70%)"></div>
+  <div class="nebula" style="width:500px;height:350px;bottom:0;right:-100px;background:radial-gradient(ellipse,rgba(40,80,140,0.14),transparent 70%)"></div>
+  <div class="nebula" style="width:400px;height:300px;top:40%;left:40%;background:radial-gradient(ellipse,rgba(100,50,150,0.1),transparent 70%)"></div>
+</div>
+
+<div class="grimoire">
+  <header>
+    <a class="back-link" href="index.html">← Return to the Grimoire</a>
+    <span class="sigil">✦</span>
+    <h1 class="header-title">The Spread Compendium</h1>
+    <p class="header-sub">a guide to arcane card layouts &amp; their mysteries</p>
+    <div class="divider"></div>
+  </header>
+
+  <p class="intro">
+    A tarot spread is a ritual arrangement of cards, each position holding a specific question or lens
+    through which the card's wisdom is interpreted. The same card drawn for "the past" speaks differently
+    than one drawn for "hidden fears." These are the most enduring layouts — from the swift single draw
+    to the grand ten-card inquiry.
+  </p>
+
+  <nav class="toc">
+    <a class="toc-pill" href="#single">Single Card</a>
+    <a class="toc-pill" href="#three">Three Card</a>
+    <a class="toc-pill" href="#five">Five Card Cross</a>
+    <a class="toc-pill" href="#horseshoe">Horseshoe</a>
+    <a class="toc-pill" href="#celtic">Celtic Cross</a>
+    <a class="toc-pill" href="#relationship">Relationship</a>
+    <a class="toc-pill" href="#year">Year Ahead</a>
+  </nav>
+
+  <!-- ═══════════════ SINGLE CARD ═══════════════ -->
+  <section class="spread-section" id="single">
+    <div class="spread-header">
+      <div class="spread-header-line left"></div>
+      <div class="spread-title-wrap">
+        <div class="spread-name">The Single Card</div>
+        <div class="spread-cards-badge">1 card · 1–2 minutes</div>
+      </div>
+      <div class="spread-header-line"></div>
+    </div>
+    <div class="spread-body">
+      <div>
+        <p class="spread-desc">
+          The simplest and most direct reading. One question, one card — the message is undiluted.
+          Ideal as a <strong>daily practice</strong> to set intention for the day, or when you need
+          a swift, clear answer without the weight of context. Do not underestimate its depth:
+          a single card drawn with focused intention can carry as much insight as a ten-card spread.
+        </p>
+        <div class="spread-uses-label">Best Used For</div>
+        <div class="spread-uses">
+          <span class="use-tag">Daily draws</span>
+          <span class="use-tag">Quick guidance</span>
+          <span class="use-tag">Yes/no questions</span>
+          <span class="use-tag">Morning intention</span>
+          <span class="use-tag">Beginners</span>
+        </div>
+        <div class="position-list">
+          <div class="position-item">
+            <div class="position-num">1</div>
+            <div class="position-info">
+              <div class="position-name">The Message</div>
+              <div class="position-meaning">The central wisdom, answer, or energy the cards wish to illuminate. Interpret literally and symbolically.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="diagram-wrap">
+        <div class="diagram-label">Layout</div>
+        <div class="diagram">
+          <div class="cs">1</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ THREE CARD ═══════════════ -->
+  <section class="spread-section" id="three">
+    <div class="spread-header">
+      <div class="spread-header-line left"></div>
+      <div class="spread-title-wrap">
+        <div class="spread-name">The Three Card</div>
+        <div class="spread-cards-badge">3 cards · 5–10 minutes</div>
+      </div>
+      <div class="spread-header-line"></div>
+    </div>
+    <div class="spread-body">
+      <div>
+        <p class="spread-desc">
+          The most widely used spread in tarot. Three cards read left to right form a narrative arc —
+          the most common being <em>Past · Present · Future</em>, but the positions are flexible.
+          Adapt the labels to the question: <em>Situation · Action · Outcome</em>,
+          <em>Mind · Body · Spirit</em>, or <em>Strength · Challenge · Advice</em>.
+          The power lies in the story the three cards tell together, not in isolation.
+        </p>
+        <div class="spread-uses-label">Best Used For</div>
+        <div class="spread-uses">
+          <span class="use-tag">Everyday questions</span>
+          <span class="use-tag">Decision-making</span>
+          <span class="use-tag">Progress check-ins</span>
+          <span class="use-tag">Relationships</span>
+          <span class="use-tag">General guidance</span>
+        </div>
+        <div class="position-list">
+          <div class="position-item">
+            <div class="position-num">1</div>
+            <div class="position-info">
+              <div class="position-name">The Past</div>
+              <div class="position-meaning">What led you here. Energies, events, or patterns that shaped the current moment.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">2</div>
+            <div class="position-info">
+              <div class="position-name">The Present</div>
+              <div class="position-meaning">Where you stand now. The current situation, energy, or state of things.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">3</div>
+            <div class="position-info">
+              <div class="position-name">The Future</div>
+              <div class="position-meaning">Where things are headed if the current path continues. Not fixed — a likely outcome.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="diagram-wrap">
+        <div class="diagram-label">Layout</div>
+        <div class="diagram">
+          <div class="d-row">
+            <div class="cs">1</div>
+            <div class="cs">2</div>
+            <div class="cs">3</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ FIVE CARD CROSS ═══════════════ -->
+  <section class="spread-section" id="five">
+    <div class="spread-header">
+      <div class="spread-header-line left"></div>
+      <div class="spread-title-wrap">
+        <div class="spread-name">The Five Card Cross</div>
+        <div class="spread-cards-badge">5 cards · 10–15 minutes</div>
+      </div>
+      <div class="spread-header-line"></div>
+    </div>
+    <div class="spread-body">
+      <div>
+        <p class="spread-desc">
+          A cross of four directions with a central card — elegant and versatile. The center card
+          anchors the reading and speaks to the heart of the matter. The four surrounding cards
+          examine it from below (roots), above (potential), behind (past), and ahead (future).
+          This spread is ideal when a question has <strong>multiple dimensions</strong> that need
+          to be understood in relation to one another.
+        </p>
+        <div class="spread-uses-label">Best Used For</div>
+        <div class="spread-uses">
+          <span class="use-tag">Complex decisions</span>
+          <span class="use-tag">Career questions</span>
+          <span class="use-tag">Creative projects</span>
+          <span class="use-tag">Spiritual growth</span>
+        </div>
+        <div class="position-list">
+          <div class="position-item">
+            <div class="position-num">1</div>
+            <div class="position-info">
+              <div class="position-name">The Heart</div>
+              <div class="position-meaning">The central situation. The core of the matter at hand.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">2</div>
+            <div class="position-info">
+              <div class="position-name">The Crown</div>
+              <div class="position-meaning">What to aspire toward. The highest possible outcome or guiding principle.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">3</div>
+            <div class="position-info">
+              <div class="position-name">The Root</div>
+              <div class="position-meaning">What grounds you. The foundation, subconscious motivation, or hidden basis.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">4</div>
+            <div class="position-info">
+              <div class="position-name">The Recent Past</div>
+              <div class="position-meaning">What is passing or has recently influenced the situation.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">5</div>
+            <div class="position-info">
+              <div class="position-name">The Near Future</div>
+              <div class="position-meaning">What approaches. The next development or energy entering the situation.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="diagram-wrap">
+        <div class="diagram-label">Layout</div>
+        <div class="diagram">
+          <div class="d-cross">
+            <div></div><div class="cs">2</div><div></div>
+            <div class="cs">4</div><div class="cs" style="background:rgba(201,164,85,0.12);border-color:rgba(201,164,85,0.6)">1</div><div class="cs">5</div>
+            <div></div><div class="cs">3</div><div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ HORSESHOE ═══════════════ -->
+  <section class="spread-section" id="horseshoe">
+    <div class="spread-header">
+      <div class="spread-header-line left"></div>
+      <div class="spread-title-wrap">
+        <div class="spread-name">The Horseshoe</div>
+        <div class="spread-cards-badge">7 cards · 15–25 minutes</div>
+      </div>
+      <div class="spread-header-line"></div>
+    </div>
+    <div class="spread-body">
+      <div>
+        <p class="spread-desc">
+          Seven cards laid in an arc — the classic horseshoe. This spread offers a
+          <strong>panoramic view</strong> of a situation: where you came from, where you are,
+          the unseen forces at play, the obstacle, external pressures, advice, and the likely outcome.
+          It is particularly well-suited to situations where you feel stuck or unsure of which forces
+          are shaping your circumstances.
+        </p>
+        <div class="spread-uses-label">Best Used For</div>
+        <div class="spread-uses">
+          <span class="use-tag">Feeling stuck</span>
+          <span class="use-tag">Life transitions</span>
+          <span class="use-tag">Identifying hidden influences</span>
+          <span class="use-tag">Practical guidance</span>
+        </div>
+        <div class="position-list">
+          <div class="position-item">
+            <div class="position-num">1</div>
+            <div class="position-info">
+              <div class="position-name">The Past</div>
+              <div class="position-meaning">The recent past and what has been left behind.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">2</div>
+            <div class="position-info">
+              <div class="position-name">The Present</div>
+              <div class="position-meaning">Current conditions — the state of the querent right now.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">3</div>
+            <div class="position-info">
+              <div class="position-name">Hidden Influences</div>
+              <div class="position-meaning">Unseen or subconscious forces at work beneath the surface.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">4</div>
+            <div class="position-info">
+              <div class="position-name">The Obstacle</div>
+              <div class="position-meaning">What stands between you and resolution. The central challenge.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">5</div>
+            <div class="position-info">
+              <div class="position-name">External Influences</div>
+              <div class="position-meaning">People, events, or forces outside of you affecting the outcome.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">6</div>
+            <div class="position-info">
+              <div class="position-name">The Advice</div>
+              <div class="position-meaning">What action, attitude, or wisdom to bring forward.</div>
+            </div>
+          </div>
+          <div class="position-item">
+            <div class="position-num">7</div>
+            <div class="position-info">
+              <div class="position-name">The Outcome</div>
+              <div class="position-meaning">The most probable result if things continue on their current course.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="diagram-wrap">
+        <div class="diagram-label">Layout</div>
+        <div class="diagram">
+          <div class="d-horseshoe">
+            <div class="d-horseshoe-top">
+              <div class="cs">1</div>
+              <div class="cs">2</div>
+              <div class="cs">3</div>
+              <div class="cs">4</div>
+            </div>
+            <div class="d-horseshoe-bot">
+              <div class="cs">5</div>
+              <div class="cs">6</div>
+              <div class="cs">7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ CELTIC CROSS ═══════════════ -->
+  <section class="spread-section" id="celtic">
+    <div class="spread-header">
+      <div class="spread-header-line left"></div>
+      <div class="spread-title-wrap">
+        <div class="spread-name">The Celtic Cross</div>
+        <div class="spread-cards-badge">10 cards · 30–45 minutes</div>
+      </div>
+      <div class="spread-header-line"></div>
+    </div>
+    <div class="spread-body">
+      <div>
+        <p class="spread-desc">
+          The most renowned spread in Western tarot, believed to derive from older divinatory
+          traditions. Ten cards arranged in two parts: a <em>cross</em> of six cards that examines
+          the central situation from every angle, and a <em>staff</em> of four cards revealing the
+          deeper psychological and outcome dimension. The Celtic Cross rewards patience —
+          each card modifies the others, and the full picture only emerges when all ten are
+          <strong>read as a conversation</strong> rather than ten separate messages.
+        </p>
+        <div class="spread-uses-label">Best Used For</div>
+        <div class="spread-uses">
+          <span class="use-tag">Major life questions</span>
+          <span class="use-tag">Deep introspection</span>
+          <span class="use-tag">Long-term situations</span>
+          <span class="use-tag">Comprehensive guidance</span>
+          <span class="use-tag">Experienced readers</span>
+        </div>
+        <div class="position-list">
+          <div class="position-item"><div class="position-num">1</div><div class="position-info"><div class="position-name">The Situation</div><div class="position-meaning">The heart of the matter — the current circumstances surrounding the question.</div></div></div>
+          <div class="position-item"><div class="position-num">2</div><div class="position-info"><div class="position-name">The Challenge</div><div class="position-meaning">What crosses or complicates card 1. This can be an obstacle or a supporting force.</div></div></div>
+          <div class="position-item"><div class="position-num">3</div><div class="position-info"><div class="position-name">The Crown</div><div class="position-meaning">The best possible outcome or the ideal the querent is consciously working toward.</div></div></div>
+          <div class="position-item"><div class="position-num">4</div><div class="position-info"><div class="position-name">The Foundation</div><div class="position-meaning">The root of the matter — past events or deeply held beliefs shaping the present.</div></div></div>
+          <div class="position-item"><div class="position-num">5</div><div class="position-info"><div class="position-name">The Recent Past</div><div class="position-meaning">Events or energies that are passing out of the situation.</div></div></div>
+          <div class="position-item"><div class="position-num">6</div><div class="position-info"><div class="position-name">The Near Future</div><div class="position-meaning">What is approaching — the next development within weeks.</div></div></div>
+          <div class="position-item"><div class="position-num">7</div><div class="position-info"><div class="position-name">The Self</div><div class="position-meaning">The querent's current attitude, fears, or approach to the situation.</div></div></div>
+          <div class="position-item"><div class="position-num">8</div><div class="position-info"><div class="position-name">External Influences</div><div class="position-meaning">The environment and other people's attitudes and energies affecting the outcome.</div></div></div>
+          <div class="position-item"><div class="position-num">9</div><div class="position-info"><div class="position-name">Hopes &amp; Fears</div><div class="position-meaning">What the querent deeply desires or dreads — often both at once.</div></div></div>
+          <div class="position-item"><div class="position-num">10</div><div class="position-info"><div class="position-name">The Outcome</div><div class="position-meaning">The final result if the current path continues. Influenced by all preceding cards.</div></div></div>
+        </div>
+      </div>
+      <div class="diagram-wrap">
+        <div class="diagram-label">Layout</div>
+        <div class="diagram">
+          <div class="d-celtic">
+            <!-- row 1 -->
+            <div></div>
+            <div class="cs">3</div>
+            <div></div>
+            <div></div>
+            <div class="cs">10</div>
+            <!-- row 2 -->
+            <div class="cs">5</div>
+            <div class="cs" style="background:rgba(201,164,85,0.12);border-color:rgba(201,164,85,0.6)">1</div>
+            <div class="cs">6</div>
+            <div></div>
+            <div class="cs">9</div>
+            <!-- row 3 -->
+            <div></div>
+            <div class="cs" style="border-style:dashed;opacity:0.7">2</div>
+            <div></div>
+            <div></div>
+            <div class="cs">8</div>
+            <!-- row 4 -->
+            <div></div>
+            <div class="cs">4</div>
+            <div></div>
+            <div></div>
+            <div class="cs">7</div>
+          </div>
+        </div>
+        <p style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.72rem;color:rgba(201,164,85,0.35);text-align:center;max-width:220px;">Card 2 traditionally lies across card 1 at 90°, representing the crossing force.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ RELATIONSHIP ═══════════════ -->
+  <section class="spread-section" id="relationship">
+    <div class="spread-header">
+      <div class="spread-header-line left"></div>
+      <div class="spread-title-wrap">
+        <div class="spread-name">The Relationship Spread</div>
+        <div class="spread-cards-badge">7 cards · 20–30 minutes</div>
+      </div>
+      <div class="spread-header-line"></div>
+    </div>
+    <div class="spread-body">
+      <div>
+        <p class="spread-desc">
+          Designed specifically to illuminate a bond between two people — romantic, platonic,
+          professional, or familial. Two columns face each other: one for you, one for them,
+          with a center column revealing what exists between you. This spread is most powerful
+          when approached with <strong>genuine curiosity</strong> rather than a desired answer —
+          the cards may reveal uncomfortable truths about your own role in the dynamic.
+        </p>
+        <div class="spread-uses-label">Best Used For</div>
+        <div class="spread-uses">
+          <span class="use-tag">Romantic relationships</span>
+          <span class="use-tag">Friendships</span>
+          <span class="use-tag">Family dynamics</span>
+          <span class="use-tag">Business partnerships</span>
+          <span class="use-tag">Conflict resolution</span>
+        </div>
+        <div class="position-list">
+          <div class="position-item"><div class="position-num">1</div><div class="position-info"><div class="position-name">You</div><div class="position-meaning">Your energy, feelings, and current state within this connection.</div></div></div>
+          <div class="position-item"><div class="position-num">2</div><div class="position-info"><div class="position-name">Them</div><div class="position-meaning">Their energy, feelings, and current state within this connection.</div></div></div>
+          <div class="position-item"><div class="position-num">3</div><div class="position-info"><div class="position-name">The Foundation</div><div class="position-meaning">What the relationship is built upon — shared values, history, or experience.</div></div></div>
+          <div class="position-item"><div class="position-num">4</div><div class="position-info"><div class="position-name">The Bond</div><div class="position-meaning">The connective force between you — what draws or holds you together.</div></div></div>
+          <div class="position-item"><div class="position-num">5</div><div class="position-info"><div class="position-name">The Obstacle</div><div class="position-meaning">What challenges or strains this relationship at present.</div></div></div>
+          <div class="position-item"><div class="position-num">6</div><div class="position-info"><div class="position-name">What You Need</div><div class="position-meaning">Your deeper unmet need within this dynamic.</div></div></div>
+          <div class="position-item"><div class="position-num">7</div><div class="position-info"><div class="position-name">The Path Forward</div><div class="position-meaning">Guidance for how this relationship can grow, heal, or evolve.</div></div></div>
+        </div>
+      </div>
+      <div class="diagram-wrap">
+        <div class="diagram-label">Layout</div>
+        <div class="diagram">
+          <div class="d-rel">
+            <div class="cs" style="color:var(--cyan-glow);border-color:rgba(93,228,212,0.4)">1</div>
+            <div class="cs">3</div>
+            <div class="cs" style="color:var(--violet);border-color:rgba(139,92,246,0.4)">2</div>
+            <div class="cs" style="color:var(--cyan-glow);border-color:rgba(93,228,212,0.4)">6</div>
+            <div class="cs" style="background:rgba(201,164,85,0.12);border-color:rgba(201,164,85,0.6)">4</div>
+            <div class="cs" style="color:var(--violet);border-color:rgba(139,92,246,0.4)">—</div>
+            <div></div>
+            <div class="cs">5</div>
+            <div></div>
+            <div></div>
+            <div class="cs">7</div>
+            <div></div>
+          </div>
+        </div>
+        <p style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.72rem;color:rgba(201,164,85,0.35);text-align:center;max-width:200px;margin-top:8px;">Cyan = You · Gold = Shared · Violet = Them</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ YEAR AHEAD ═══════════════ -->
+  <section class="spread-section" id="year">
+    <div class="spread-header">
+      <div class="spread-header-line left"></div>
+      <div class="spread-title-wrap">
+        <div class="spread-name">The Year Ahead</div>
+        <div class="spread-cards-badge">13 cards · 45–60 minutes</div>
+      </div>
+      <div class="spread-header-line"></div>
+    </div>
+    <div class="spread-body">
+      <div>
+        <p class="spread-desc">
+          Thirteen cards — one for each month of the coming year, plus a thirteenth that names the
+          <strong>overarching theme</strong> of the year as a whole. Traditionally performed at the
+          new year or on a personal anniversary. Each monthly card is not a prediction but an
+          <em>energetic weather forecast</em>: a tone, challenge, or gift the month may carry.
+          Read the months in sequence to spot patterns and turning points across the arc of the year.
+        </p>
+        <div class="spread-uses-label">Best Used For</div>
+        <div class="spread-uses">
+          <span class="use-tag">New Year's ritual</span>
+          <span class="use-tag">Birthdays</span>
+          <span class="use-tag">Annual reflection</span>
+          <span class="use-tag">Long-term planning</span>
+          <span class="use-tag">Cyclical awareness</span>
+        </div>
+        <div class="position-list">
+          <div class="position-item"><div class="position-num" style="width:auto;padding:0 8px;min-width:26px">1–12</div><div class="position-info"><div class="position-name">The Months</div><div class="position-meaning">Each card corresponds to a calendar month, drawn in order. The card names the prevailing energy, lesson, or theme that month holds.</div></div></div>
+          <div class="position-item"><div class="position-num">13</div><div class="position-info"><div class="position-name">The Year's Theme</div><div class="position-meaning">The overarching spiritual or personal current running through the entire year. Often the most significant card in the spread.</div></div></div>
+        </div>
+      </div>
+      <div class="diagram-wrap">
+        <div class="diagram-label">Layout</div>
+        <div class="diagram">
+          <div class="d-year">
+            <div class="d-year-months">
+              <div class="cs" title="January">J</div>
+              <div class="cs" title="February">F</div>
+              <div class="cs" title="March">M</div>
+              <div class="cs" title="April">A</div>
+              <div class="cs" title="May">M</div>
+              <div class="cs" title="June">J</div>
+              <div class="cs" title="July">J</div>
+              <div class="cs" title="August">A</div>
+              <div class="cs" title="September">S</div>
+              <div class="cs" title="October">O</div>
+              <div class="cs" title="November">N</div>
+              <div class="cs" title="December">D</div>
+            </div>
+            <div class="d-year-theme">
+              <div class="cs" style="background:rgba(201,164,85,0.12);border-color:rgba(201,164,85,0.6);width:auto;padding:0 16px;font-size:0.62rem;letter-spacing:0.1em">THEME</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  const sf = document.getElementById('starfield');
+  for(let i=0;i<140;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*2.2+0.4;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--dur:${2+Math.random()*5}s;--bright:${0.3+Math.random()*0.7};animation-delay:${Math.random()*6}s;`;
+    sf.appendChild(s);
+  }
+})();
+</script>
+</body>
+</html>
