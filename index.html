@@ -891,42 +891,56 @@ header {
   color:rgba(80,50,10,0.38); text-align:center; padding:10px 32px 0; letter-spacing:0.04em;
 }
 
-/* ── CLOUD SYNC MODAL ───────────────────────────────────────────── */
-.sync-overlay {
+/* ── GITHUB SYNC ────────────────────────────────────────────────── */
+.sync-badge {
+  font-family:'Cinzel',serif; font-size:0.62rem; letter-spacing:0.1em;
+  padding:4px 10px; border-radius:2px; border:1px solid transparent;
+  transition:all 0.3s;
+}
+.sync-local   { color:rgba(201,164,85,0.35); }
+.sync-saving  { color:var(--gold); background:rgba(201,164,85,0.08); border-color:rgba(201,164,85,0.2); }
+.sync-ok      { color:var(--sage); background:rgba(90,170,128,0.08); border-color:rgba(90,170,128,0.25); }
+.sync-error   { color:var(--rose); background:rgba(217,123,138,0.08); border-color:rgba(217,123,138,0.25); }
+
+/* Settings modal */
+.settings-overlay {
   display:none; position:fixed; inset:0;
   background:rgba(5,5,15,0.88); backdrop-filter:blur(8px);
   z-index:3500; align-items:center; justify-content:center; padding:24px;
 }
-.sync-overlay.open { display:flex; }
-.sync-card {
+.settings-overlay.open { display:flex; }
+.settings-card {
   background:var(--midnight); border:1px solid rgba(201,164,85,0.2); border-radius:2px;
   max-width:500px; width:100%;
   box-shadow:0 24px 80px rgba(0,0,0,0.7),0 0 40px rgba(201,164,85,0.08);
   animation:revealScroll 0.35s cubic-bezier(0.22,1,0.36,1); overflow:hidden;
 }
-.sync-header {
+.settings-header {
   padding:18px 24px;
   background:linear-gradient(to right,rgba(201,164,85,0.06),transparent);
   border-bottom:1px solid rgba(201,164,85,0.12);
   display:flex; align-items:center; justify-content:space-between;
 }
-.sync-header h2 { font-family:'Cinzel',serif; font-size:0.85rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; }
-.sync-header button { background:none; border:none; color:rgba(201,164,85,0.4); cursor:pointer; font-size:1.1rem; transition:color 0.2s; }
-.sync-header button:hover { color:var(--gold); }
-.sync-body { padding:20px 24px; display:flex; flex-direction:column; gap:14px; }
-.sync-body label { font-family:'Cinzel',serif; font-size:0.68rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(201,164,85,0.5); display:block; margin-bottom:5px; }
-.sync-body input { width:100%; padding:9px 13px; background:rgba(255,255,255,0.04); border:1px solid rgba(201,164,85,0.15); border-radius:1px; font-family:'IM Fell English',serif; font-size:0.9rem; color:var(--parchment); outline:none; transition:border-color 0.2s; }
-.sync-body input:focus { border-color:rgba(201,164,85,0.45); }
-.sync-body input::placeholder { color:rgba(201,164,85,0.3); }
-.sync-hint { font-family:'IM Fell English',serif; font-style:italic; font-size:0.75rem; color:rgba(201,164,85,0.3); line-height:1.5; }
-.sync-status { font-family:'IM Fell English',serif; font-style:italic; font-size:0.82rem; text-align:center; min-height:1.2em; transition:color 0.2s; }
-.sync-status.ok  { color:var(--sage); }
-.sync-status.err { color:var(--rose); }
-.sync-actions { padding:14px 24px 18px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid rgba(201,164,85,0.1); }
-.btn-pull { padding:9px 20px; background:rgba(93,228,212,0.06); border:1px solid rgba(93,228,212,0.25); border-radius:1px; font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.12em; color:#5de4d4; cursor:pointer; transition:all 0.2s; }
-.btn-pull:hover { background:rgba(93,228,212,0.12); }
-.btn-push { padding:9px 20px; background:linear-gradient(135deg,rgba(201,164,85,0.18),rgba(201,164,85,0.08)); border:1px solid rgba(201,164,85,0.4); border-radius:1px; font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.12em; color:var(--gold-pale); cursor:pointer; transition:all 0.2s; }
-.btn-push:hover { background:linear-gradient(135deg,rgba(201,164,85,0.28),rgba(201,164,85,0.14)); box-shadow:0 0 20px rgba(201,164,85,0.2); }
+.settings-header h2 { font-family:'Cinzel',serif; font-size:0.85rem; letter-spacing:0.18em; color:var(--gold); text-transform:uppercase; }
+.settings-header button { background:none; border:none; color:rgba(201,164,85,0.4); cursor:pointer; font-size:1.1rem; transition:color 0.2s; }
+.settings-header button:hover { color:var(--gold); }
+.settings-body { padding:20px 24px; display:flex; flex-direction:column; gap:14px; }
+.settings-note { font-family:'IM Fell English',serif; font-style:italic; font-size:0.8rem; color:rgba(201,164,85,0.4); line-height:1.6; }
+.settings-note a { color:rgba(201,164,85,0.6); }
+.settings-note code { font-family:'Courier New',monospace; font-style:normal; font-size:0.8em; color:var(--gold); }
+.settings-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.settings-field { display:flex; flex-direction:column; gap:5px; }
+.settings-field.full { grid-column:1/-1; }
+.settings-field label { font-family:'Cinzel',serif; font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase; color:rgba(201,164,85,0.5); }
+.settings-field input { width:100%; padding:9px 13px; background:rgba(255,255,255,0.04); border:1px solid rgba(201,164,85,0.15); border-radius:1px; font-family:'IM Fell English',serif; font-size:0.88rem; color:var(--parchment); outline:none; transition:border-color 0.2s; }
+.settings-field input:focus { border-color:rgba(201,164,85,0.45); }
+.settings-field input::placeholder { color:rgba(201,164,85,0.28); }
+.conn-status { font-family:'IM Fell English',serif; font-style:italic; font-size:0.8rem; padding:8px 12px; border-radius:1px; display:none; grid-column:1/-1; }
+.conn-ok    { display:block; background:rgba(90,170,128,0.1); border:1px solid rgba(90,170,128,0.3); color:var(--sage); }
+.conn-error { display:block; background:rgba(217,123,138,0.1); border:1px solid rgba(217,123,138,0.3); color:var(--rose); }
+.settings-actions { padding:14px 24px 18px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid rgba(201,164,85,0.1); }
+.btn-test { padding:9px 20px; background:transparent; border:1px solid rgba(201,164,85,0.25); border-radius:1px; font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.12em; color:rgba(201,164,85,0.6); cursor:pointer; transition:all 0.2s; }
+.btn-test:hover { border-color:rgba(201,164,85,0.5); color:var(--gold); }
 .data-btn[href] { text-decoration:none; }
 </style>
 </head>
@@ -950,7 +964,8 @@ header {
       <div class="data-toolbar-sep"></div>
       <button class="data-btn" onclick="openImport()">⬆ Import Scrolls</button>
       <div class="data-toolbar-sep"></div>
-      <button class="data-btn" onclick="openSync()">☁ Cloud Sync</button>
+      <span class="sync-badge sync-local" id="syncStatus">Local only</span>
+      <button class="data-btn" onclick="openSettings()">⚙ Sync Settings</button>
       <div class="data-toolbar-sep"></div>
       <a class="data-btn" href="spreads.html">✦ Spread Compendium</a>
     </div>
@@ -1088,36 +1103,48 @@ header {
   </div>
 </div>
 
-<!-- Cloud Sync Overlay -->
-<div class="sync-overlay" id="syncOverlay" onclick="closeSyncModal(event)">
-  <div class="sync-card" onclick="event.stopPropagation()">
-    <div class="sync-header">
-      <h2>☁ Cloud Sync — GitHub Gist</h2>
-      <button onclick="closeSync()">✕</button>
+<!-- GitHub Sync Settings Overlay -->
+<div class="settings-overlay" id="settingsOverlay" onclick="bgCloseSettings(event)">
+  <div class="settings-card" onclick="event.stopPropagation()">
+    <div class="settings-header">
+      <h2>☁ GitHub Sync</h2>
+      <button onclick="closeSettings()">✕</button>
     </div>
-    <div class="sync-body">
-      <div>
-        <label>Personal Access Token <span style="font-weight:400;text-transform:none;font-family:'IM Fell English',serif;font-style:italic;color:rgba(201,164,85,0.35)">(gist scope)</span></label>
-        <input type="password" id="syncToken" placeholder="ghp_…" autocomplete="off"/>
-      </div>
-      <div>
-        <label>Gist ID <span style="font-weight:400;text-transform:none;font-family:'IM Fell English',serif;font-style:italic;color:rgba(201,164,85,0.35)">(auto-filled after first push)</span></label>
-        <input type="text" id="syncGistId" placeholder="leave blank to create a new gist"/>
-      </div>
-      <div>
-        <label>Pull Mode</label>
-        <div class="import-mode-row">
-          <button class="import-mode-btn selected" id="syncMerge" onclick="setSyncMode('merge')">✦ Merge — keep existing + add new</button>
-          <button class="import-mode-btn" id="syncReplace" onclick="setSyncMode('replace')">⊛ Replace — overwrite everything</button>
+    <div class="settings-body">
+      <p class="settings-note">
+        Saves <code>grimoire_data.json</code> directly to your GitHub repo via the Contents API.
+        Requires a <a href="https://github.com/settings/tokens" target="_blank">Personal Access Token</a>
+        with <code>Contents: Read &amp; Write</code> permission.
+        The token is stored only in this browser's localStorage.
+      </p>
+      <div class="settings-grid">
+        <div class="settings-field full">
+          <label>Personal Access Token</label>
+          <input type="password" id="sToken" placeholder="github_pat_…" autocomplete="off"/>
         </div>
+        <div class="settings-field">
+          <label>Owner (username or org)</label>
+          <input type="text" id="sOwner" placeholder="your-username"/>
+        </div>
+        <div class="settings-field">
+          <label>Repository Name</label>
+          <input type="text" id="sRepo" placeholder="tarot-cards"/>
+        </div>
+        <div class="settings-field">
+          <label>File Path</label>
+          <input type="text" id="sFile" placeholder="grimoire_data.json"/>
+        </div>
+        <div class="settings-field">
+          <label>Branch</label>
+          <input type="text" id="sBranch" placeholder="main"/>
+        </div>
+        <div class="conn-status" id="connStatus"></div>
       </div>
-      <div class="sync-status" id="syncStatus"></div>
-      <p class="sync-hint">Your token is stored only in this browser's localStorage and never sent anywhere except api.github.com. Create a token at GitHub → Settings → Developer Settings → Personal Access Tokens → Fine-grained, with Gists read/write permission.</p>
     </div>
-    <div class="sync-actions">
-      <button class="btn-cancel" onclick="closeSync()">Close</button>
-      <button class="btn-pull" onclick="pullFromGist()">↓ Pull from Gist</button>
-      <button class="btn-push" onclick="pushToGist()">↑ Push to Gist</button>
+    <div class="settings-actions">
+      <button class="btn-cancel" onclick="closeSettings()">Cancel</button>
+      <button class="btn-test" onclick="testConnection()" id="testBtn">Test Connection</button>
+      <button class="btn-save" onclick="saveSettings()">✦ Save &amp; Sync</button>
     </div>
   </div>
 </div>
@@ -1182,8 +1209,8 @@ const sampleCards = [
 ];
 
 /* ── State ──────────────────────────────────────────────────────── */
-let cards = JSON.parse(localStorage.getItem('grimoire_v2') || 'null') || sampleCards;
-let nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
+let cards = [];
+let nextId = 1;
 let activeTag = 'all';
 let editingId = null;
 let openCardId = null;
@@ -1192,9 +1219,46 @@ let sortOrder   = 'newest';
 let pendingDeleteId = null;
 const mdCache   = new Map();
 
-function save(){
+let fileSha = null;
+let ghConfig = JSON.parse(localStorage.getItem('grimoire_gh') || 'null');
+
+function setSyncStatus(state, msg){
+  const el = document.getElementById('syncStatus');
+  el.className = 'sync-badge sync-' + state;
+  el.textContent = msg;
+}
+
+function saveLocal(){
   try{ localStorage.setItem('grimoire_v2', JSON.stringify(cards)); }catch(e){}
   checkStorage();
+}
+
+async function save(){
+  saveLocal();
+  if(!ghConfig?.token){ setSyncStatus('local','Local only'); return; }
+  setSyncStatus('saving','Saving…');
+  try{
+    const payload = { version:1, exported:new Date().toISOString(), cards };
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+    const body = {
+      message: `Update grimoire — ${new Date().toISOString().slice(0,10)}`,
+      content,
+      ...(fileSha ? { sha: fileSha } : {}),
+      ...(ghConfig.branch ? { branch: ghConfig.branch } : {})
+    };
+    const res = await fetch(ghUrl(), {
+      method: 'PUT',
+      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    if(!res.ok){ const e = await res.json(); throw new Error(e.message || `GitHub ${res.status}`); }
+    const data = await res.json();
+    fileSha = data.content.sha;
+    setSyncStatus('ok','Saved ✓');
+  }catch(e){
+    setSyncStatus('error','Save failed');
+    console.error(e);
+  }
 }
 
 function checkStorage(){
@@ -1603,128 +1667,155 @@ function confirmImport(){
   });
 })();
 
-/* ── Cloud Sync (GitHub Gist) ───────────────────────────────────── */
-const GIST_FILE    = 'grimoire.json';
-const KEY_TOKEN    = 'grimoire_gh_token';
-const KEY_GIST     = 'grimoire_gh_gist';
-let syncMode       = 'merge';
+/* ── GitHub Contents API Sync ───────────────────────────────────── */
+function ghHeaders(){
+  return {
+    'Authorization': `Bearer ${ghConfig.token}`,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28'
+  };
+}
 
-function openSync(){
-  document.getElementById('syncToken').value  = localStorage.getItem(KEY_TOKEN) || '';
-  document.getElementById('syncGistId').value = localStorage.getItem(KEY_GIST)  || '';
-  setSyncStatus('','');
-  setSyncMode('merge');
-  document.getElementById('syncOverlay').classList.add('open');
+function ghUrl(){
+  const f = ghConfig.file || 'grimoire_data.json';
+  return `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${f}`;
+}
+
+async function loadFromGitHub(){
+  if(!ghConfig?.token){
+    const stored = localStorage.getItem('grimoire_v2');
+    cards  = stored ? JSON.parse(stored) : sampleCards.map(c=>({...c}));
+    nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
+    setSyncStatus('local','Local only');
+    migrateMissingTimestamps();
+    renderCards();
+    checkStorage();
+    return;
+  }
+  setSyncStatus('saving','Loading…');
+  try{
+    const params = ghConfig.branch ? `?ref=${ghConfig.branch}` : '';
+    const res = await fetch(ghUrl() + params, { headers: ghHeaders() });
+    if(res.status === 404){
+      const stored = localStorage.getItem('grimoire_v2');
+      cards  = stored ? JSON.parse(stored) : sampleCards.map(c=>({...c}));
+      fileSha = null;
+      setSyncStatus('ok','Connected — no data file yet');
+      nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
+      migrateMissingTimestamps();
+      renderCards();
+      return;
+    }
+    if(!res.ok) throw new Error(`GitHub ${res.status}`);
+    const data = await res.json();
+    fileSha = data.sha;
+    const parsed = JSON.parse(atob(data.content.replace(/\n/g,'')));
+    cards  = Array.isArray(parsed) ? parsed : (parsed.cards || []);
+    nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
+    setSyncStatus('ok','Synced ✓');
+    migrateMissingTimestamps();
+    renderCards();
+    checkStorage();
+  }catch(e){
+    setSyncStatus('error','Load failed');
+    console.error(e);
+    const stored = localStorage.getItem('grimoire_v2');
+    cards  = stored ? JSON.parse(stored) : sampleCards.map(c=>({...c}));
+    nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
+    migrateMissingTimestamps();
+    renderCards();
+    checkStorage();
+  }
+}
+
+function migrateMissingTimestamps(){
+  let changed = false;
+  cards.forEach(c=>{ if(!c.createdAt){ c.createdAt = new Date().toISOString(); changed=true; } });
+  if(changed) saveLocal();
+}
+
+// ── Settings modal ──
+function openSettings(){
+  const c = ghConfig || {};
+  document.getElementById('sToken').value  = c.token  || '';
+  document.getElementById('sOwner').value  = c.owner  || '';
+  document.getElementById('sRepo').value   = c.repo   || '';
+  document.getElementById('sFile').value   = c.file   || 'grimoire_data.json';
+  document.getElementById('sBranch').value = c.branch || 'main';
+  const cs = document.getElementById('connStatus');
+  cs.className = 'conn-status'; cs.textContent = '';
+  document.getElementById('settingsOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
-function closeSync(){
-  // persist token + gist id whenever the modal is closed
-  const tok = document.getElementById('syncToken').value.trim();
-  const gid = document.getElementById('syncGistId').value.trim();
-  if(tok) localStorage.setItem(KEY_TOKEN, tok); else localStorage.removeItem(KEY_TOKEN);
-  if(gid) localStorage.setItem(KEY_GIST,  gid); else localStorage.removeItem(KEY_GIST);
-  document.getElementById('syncOverlay').classList.remove('open');
+
+function closeSettings(){
+  document.getElementById('settingsOverlay').classList.remove('open');
   document.body.style.overflow = '';
 }
-function closeSyncModal(e){ if(e.target===document.getElementById('syncOverlay')) closeSync(); }
+function bgCloseSettings(e){ if(e.target===document.getElementById('settingsOverlay')) closeSettings(); }
 
-function setSyncMode(m){
-  syncMode = m;
-  document.getElementById('syncMerge').classList.toggle('selected',   m==='merge');
-  document.getElementById('syncReplace').classList.toggle('selected', m==='replace');
-}
-function setSyncStatus(msg, cls){
-  const el = document.getElementById('syncStatus');
-  el.textContent = msg;
-  el.className = 'sync-status' + (cls ? ' '+cls : '');
-}
-
-async function pushToGist(){
-  const token  = document.getElementById('syncToken').value.trim();
-  const gistId = document.getElementById('syncGistId').value.trim() || localStorage.getItem(KEY_GIST);
-  if(!token){ setSyncStatus('✕ Enter a GitHub token first.','err'); return; }
-
-  setSyncStatus('Binding scrolls to the cloud…','');
-  const body = {
-    description: 'The Grimoire — scroll vault',
-    public: false,
-    files: { [GIST_FILE]: { content: JSON.stringify({ version:1, exported:new Date().toISOString(), cards }, null, 2) } }
+function getSettingsValues(){
+  return {
+    token:  document.getElementById('sToken').value.trim(),
+    owner:  document.getElementById('sOwner').value.trim(),
+    repo:   document.getElementById('sRepo').value.trim(),
+    file:   document.getElementById('sFile').value.trim()   || 'grimoire_data.json',
+    branch: document.getElementById('sBranch').value.trim() || 'main'
   };
-  try{
-    const url  = gistId ? `https://api.github.com/gists/${gistId}` : 'https://api.github.com/gists';
-    const resp = await fetch(url, {
-      method: gistId ? 'PATCH' : 'POST',
-      headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if(!resp.ok) throw new Error(`GitHub returned ${resp.status}`);
-    const data = await resp.json();
-    localStorage.setItem(KEY_TOKEN, token);
-    localStorage.setItem(KEY_GIST,  data.id);
-    document.getElementById('syncGistId').value = data.id;
-    setSyncStatus(`✦ ${cards.length} scroll${cards.length!==1?'s':''} pushed. Gist: ${data.id}`, 'ok');
-  }catch(e){
-    setSyncStatus(`✕ Push failed — ${e.message}`, 'err');
-  }
 }
 
-async function pullFromGist(){
-  const token  = document.getElementById('syncToken').value.trim();
-  const gistId = document.getElementById('syncGistId').value.trim() || localStorage.getItem(KEY_GIST);
-  if(!token)  { setSyncStatus('✕ Enter a GitHub token first.','err'); return; }
-  if(!gistId) { setSyncStatus('✕ Enter a Gist ID (or push first to create one).','err'); return; }
-
-  setSyncStatus('Drawing scrolls from the ether…','');
-  try{
-    const resp = await fetch(`https://api.github.com/gists/${gistId}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-    if(!resp.ok) throw new Error(`GitHub returned ${resp.status}`);
-    const data = await resp.json();
-    const file = data.files[GIST_FILE];
-    if(!file) throw new Error(`No ${GIST_FILE} found in this Gist`);
-    const parsed   = JSON.parse(file.content);
-    const incoming = Array.isArray(parsed) ? parsed : parsed.cards;
-    if(!Array.isArray(incoming)) throw new Error('Unrecognised format');
-
-    localStorage.setItem(KEY_TOKEN, token);
-    localStorage.setItem(KEY_GIST,  gistId);
-
-    if(syncMode === 'replace'){
-      cards  = incoming.map((c,i)=>({ ...c, id: i+1 }));
-      nextId = cards.length + 1;
-    } else {
-      const existing = new Set(cards.map(c=>c.title.toLowerCase()));
-      const fresh    = incoming.filter(c=>!existing.has(c.title.toLowerCase()));
-      fresh.forEach(c=>{ c.id = nextId++; });
-      cards = [...cards, ...fresh];
-    }
-    // migrate timestamps on pulled cards
-    cards.forEach(c=>{ if(!c.createdAt) c.createdAt = new Date().toISOString(); });
-    mdCache.clear();
-    activeTag = 'all';
-    save();
-    renderCards();
-    setSyncStatus(`✦ Pulled ${incoming.length} scroll${incoming.length!==1?'s':''}. Local collection updated.`, 'ok');
-  }catch(e){
-    setSyncStatus(`✕ Pull failed — ${e.message}`, 'err');
+async function testConnection(){
+  const c   = getSettingsValues();
+  const btn = document.getElementById('testBtn');
+  const cs  = document.getElementById('connStatus');
+  if(!c.token || !c.owner || !c.repo){
+    cs.className = 'conn-status conn-error';
+    cs.textContent = 'Please fill in token, owner, and repo first.';
+    return;
   }
+  btn.textContent = 'Testing…'; btn.disabled = true;
+  try{
+    const params = c.branch ? `?ref=${c.branch}` : '';
+    const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.file}${params}`;
+    const res = await fetch(url, {
+      headers: { 'Authorization': `Bearer ${c.token}`, 'Accept': 'application/vnd.github+json' }
+    });
+    if(res.status === 404){
+      cs.className = 'conn-status conn-ok';
+      cs.textContent = `✓ Repo found — ${c.file} will be created on first save.`;
+    } else if(res.ok){
+      cs.className = 'conn-status conn-ok';
+      cs.textContent = `✓ Connected — ${c.file} found and ready.`;
+    } else {
+      throw new Error(`HTTP ${res.status}`);
+    }
+  }catch(e){
+    cs.className = 'conn-status conn-error';
+    cs.textContent = `✗ ${e.message} — check token, owner, and repo name.`;
+  }
+  btn.textContent = 'Test Connection'; btn.disabled = false;
+}
+
+async function saveSettings(){
+  const c = getSettingsValues();
+  if(!c.token || !c.owner || !c.repo){
+    document.getElementById('connStatus').className = 'conn-status conn-error';
+    document.getElementById('connStatus').textContent = 'Token, owner, and repo are required.';
+    return;
+  }
+  ghConfig = c;
+  localStorage.setItem('grimoire_gh', JSON.stringify(ghConfig));
+  closeSettings();
+  fileSha = null;
+  await loadFromGitHub();
 }
 
 /* ── Keyboard ───────────────────────────────────────────────────── */
 document.addEventListener('keydown', e=>{
-  if(e.key==='Escape'){ closeOverlay(); closeEditor(); closeImport(); cancelDelete(); closeSync(); }
+  if(e.key==='Escape'){ closeOverlay(); closeEditor(); closeImport(); cancelDelete(); closeSettings(); }
 });
 
-// Migrate: assign createdAt to cards that predate this feature
-(function(){
-  let changed = false;
-  cards.forEach(c=>{ if(!c.createdAt){ c.createdAt = new Date().toISOString(); changed=true; } });
-  if(changed) save();
-})();
-
-renderCards();
-checkStorage();
+loadFromGitHub();
 </script>
 </body>
 </html>
