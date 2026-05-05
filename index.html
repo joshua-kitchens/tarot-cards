@@ -705,6 +705,21 @@ header {
   background: rgba(201,164,85,0.12);
 }
 
+/* ── SITE FOOTER ─────────────────────────────────────────────────── */
+.site-footer {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 32px;
+  background: rgba(7,8,15,0.9);
+  border-top: 1px solid rgba(201,164,85,0.1);
+  backdrop-filter: blur(10px);
+}
+
 /* ── IMPORT OVERLAY ──────────────────────────────────────────────── */
 .import-overlay {
   display: none;
@@ -962,10 +977,6 @@ header {
     <div class="divider"></div>
     <button class="new-btn" onclick="openEditor()">✦ New Entry</button>
     <div class="data-toolbar">
-      <button class="data-btn" onclick="exportJSON()">⬇ Export Entries</button>
-      <div class="data-toolbar-sep"></div>
-      <button class="data-btn" onclick="openImport()">⬆ Import Entries</button>
-      <div class="data-toolbar-sep"></div>
       <span class="sync-badge sync-local" id="syncStatus">Local only</span>
       <button class="data-btn" onclick="openSettings()">⚙ Sync Settings</button>
       <div class="data-toolbar-sep"></div>
@@ -995,6 +1006,12 @@ header {
   <div class="storage-warning" id="storageWarning"></div>
   <div class="cards-grid" id="cardsGrid"></div>
 </div>
+
+<footer class="site-footer">
+  <button class="data-btn" onclick="exportJSON()">⬇ Export Entries</button>
+  <div class="data-toolbar-sep"></div>
+  <button class="data-btn" onclick="openImport()">⬆ Import Entries</button>
+</footer>
 
 <!-- Read Overlay -->
 <div class="overlay" id="overlay" onclick="closeModal(event)">
