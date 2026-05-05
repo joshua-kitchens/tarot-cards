@@ -1,15 +1,16 @@
 {
   "version": 1,
-  "exported": "2026-05-05T00:27:18.098Z",
+  "exported": "2026-05-05T00:42:07.616Z",
   "cards": [
     {
       "id": 1,
       "title": "The Lovers",
       "tag": "#unknown",
-      "color": "theme-cyan",
+      "color": "theme-major",
       "content": "# The Lovers\n\n|Upright Keywords | Reversed Keywords|\n|-------|---------|\n\n## Upright Meanings\n\n## Reversed Meanings\n\n## Thoughts\n\n## Sources",
       "image": null,
-      "createdAt": "2026-05-05T00:27:18.097Z"
+      "createdAt": "2026-05-05T00:27:18.097Z",
+      "updatedAt": "2026-05-05T00:42:07.616Z"
     }
   ]
 }
