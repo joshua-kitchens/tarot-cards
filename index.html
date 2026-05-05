@@ -1718,7 +1718,8 @@ async function loadFromGitHub(){
     if(!res.ok) throw new Error(`GitHub ${res.status}`);
     const data = await res.json();
     fileSha = data.sha;
-    const parsed = JSON.parse(atob(data.content.replace(/\n/g,'')));
+    const raw = atob(data.content.replace(/\n/g,''));
+    const parsed = raw.trim() ? JSON.parse(raw) : [];
     cards  = Array.isArray(parsed) ? parsed : (parsed.cards || []);
     nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
     setSyncStatus('ok','Synced ✓');
