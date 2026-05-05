@@ -1235,22 +1235,33 @@ function saveLocal(){
 
 async function save(){
   saveLocal();
-  if(!ghConfig?.token){ setSyncStatus('local','Local only'); return; }
+  if(!ghConfig?.token || !ghConfig?.owner || !ghConfig?.repo){ setSyncStatus('local','Local only'); return; }
   setSyncStatus('saving','Saving…');
   try{
     const payload = { version:1, exported:new Date().toISOString(), cards };
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
-    const body = {
-      message: `Update grimoire — ${new Date().toISOString().slice(0,10)}`,
-      content,
-      ...(fileSha ? { sha: fileSha } : {}),
-      ...(ghConfig.branch ? { branch: ghConfig.branch } : {})
+    const doput = async (sha) => {
+      const body = {
+        message: `Update grimoire — ${new Date().toISOString().slice(0,10)}`,
+        content,
+        ...(sha ? { sha } : {}),
+        ...(ghConfig.branch ? { branch: ghConfig.branch } : {})
+      };
+      return fetch(ghUrl(), {
+        method: 'PUT',
+        headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
     };
-    const res = await fetch(ghUrl(), {
-      method: 'PUT',
-      headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
+    let res = await doput(fileSha);
+    if(res.status === 409 || res.status === 422){
+      // Stale SHA — re-fetch current SHA and retry once
+      const params = ghConfig.branch ? `?ref=${ghConfig.branch}` : '';
+      const cur = await fetch(ghUrl() + params, { headers: ghHeaders() });
+      if(cur.ok){ const d = await cur.json(); fileSha = d.sha; }
+      else fileSha = null;
+      res = await doput(fileSha);
+    }
     if(!res.ok){ const e = await res.json(); throw new Error(e.message || `GitHub ${res.status}`); }
     const data = await res.json();
     fileSha = data.content.sha;
@@ -1682,7 +1693,7 @@ function ghUrl(){
 }
 
 async function loadFromGitHub(){
-  if(!ghConfig?.token){
+  if(!ghConfig?.token || !ghConfig?.owner || !ghConfig?.repo){
     const stored = localStorage.getItem('grimoire_v2');
     cards  = stored ? JSON.parse(stored) : sampleCards.map(c=>({...c}));
     nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
@@ -1697,12 +1708,10 @@ async function loadFromGitHub(){
     const params = ghConfig.branch ? `?ref=${ghConfig.branch}` : '';
     const res = await fetch(ghUrl() + params, { headers: ghHeaders() });
     if(res.status === 404){
-      const stored = localStorage.getItem('grimoire_v2');
-      cards  = stored ? JSON.parse(stored) : sampleCards.map(c=>({...c}));
+      cards  = [];
       fileSha = null;
+      nextId  = 1;
       setSyncStatus('ok','Connected — no data file yet');
-      nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
-      migrateMissingTimestamps();
       renderCards();
       return;
     }
@@ -1720,8 +1729,8 @@ async function loadFromGitHub(){
     setSyncStatus('error','Load failed');
     console.error(e);
     const stored = localStorage.getItem('grimoire_v2');
-    cards  = stored ? JSON.parse(stored) : sampleCards.map(c=>({...c}));
-    nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
+    cards  = stored ? JSON.parse(stored) : [];
+    nextId = cards.length ? Math.max(...cards.map(c=>c.id), 0) + 1 : 1;
     migrateMissingTimestamps();
     renderCards();
     checkStorage();
