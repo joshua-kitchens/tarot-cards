@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Notes on Arcana</title>
+<title>The Codex</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=IM+Fell+English:ital@0;1&family=Uncial+Antiqua&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
 <style>
@@ -375,19 +375,17 @@ header {
 .card-del:hover { background: rgba(180,40,40,0.12); color: #a33; }
 .card-edit:hover { background: rgba(201,164,85,0.15); color: var(--gold-dim); }
 
-/* ── COLOR THEMES ─────────────────────────────────────────────────── */
-.theme-violet .card-glyph-bar { color: var(--violet); background: linear-gradient(135deg, rgba(139,92,246,0.12), rgba(139,92,246,0.04)); }
-.theme-violet .card-tag       { color: var(--violet); border-color: rgba(139,92,246,0.35); }
-.theme-cyan .card-glyph-bar   { color: var(--cyan-glow); background: linear-gradient(135deg, rgba(93,228,212,0.1), rgba(93,228,212,0.03)); }
-.theme-cyan .card-tag         { color: #2a9988; border-color: rgba(93,228,212,0.35); }
-.theme-rose .card-glyph-bar   { color: var(--rose); background: linear-gradient(135deg, rgba(217,123,138,0.12), rgba(217,123,138,0.04)); }
-.theme-rose .card-tag         { color: var(--rose); border-color: rgba(217,123,138,0.35); }
-.theme-gold .card-glyph-bar   { color: var(--gold); background: linear-gradient(135deg, rgba(201,164,85,0.1), rgba(201,164,85,0.03)); }
-.theme-gold .card-tag         { color: var(--gold-dim); border-color: rgba(201,164,85,0.4); }
-.theme-ember .card-glyph-bar  { color: var(--ember); background: linear-gradient(135deg, rgba(224,123,48,0.12), rgba(224,123,48,0.04)); }
-.theme-ember .card-tag        { color: var(--ember); border-color: rgba(224,123,48,0.35); }
-.theme-sage .card-glyph-bar   { color: var(--sage); background: linear-gradient(135deg, rgba(90,170,128,0.1), rgba(90,170,128,0.03)); }
-.theme-sage .card-tag         { color: var(--sage); border-color: rgba(90,170,128,0.35); }
+/* ── COLOR THEMES (Tarot Suits) ───────────────────────────────────── */
+.theme-wands .card-glyph-bar     { color: var(--ember);  background: linear-gradient(135deg, rgba(224,123,48,0.12),  rgba(224,123,48,0.04)); }
+.theme-wands .card-tag           { color: var(--ember);  border-color: rgba(224,123,48,0.35); }
+.theme-cups .card-glyph-bar      { color: #4a9fd4;       background: linear-gradient(135deg, rgba(74,159,212,0.12),  rgba(74,159,212,0.04)); }
+.theme-cups .card-tag            { color: #3a88bb;       border-color: rgba(74,159,212,0.35); }
+.theme-swords .card-glyph-bar    { color: #8ba8d4;       background: linear-gradient(135deg, rgba(139,168,212,0.12), rgba(139,168,212,0.04)); }
+.theme-swords .card-tag          { color: #6a8ab8;       border-color: rgba(139,168,212,0.35); }
+.theme-pentacles .card-glyph-bar { color: var(--sage);   background: linear-gradient(135deg, rgba(90,170,128,0.1),   rgba(90,170,128,0.03)); }
+.theme-pentacles .card-tag       { color: var(--sage);   border-color: rgba(90,170,128,0.35); }
+.theme-major .card-glyph-bar     { color: var(--violet); background: linear-gradient(135deg, rgba(139,92,246,0.12),  rgba(139,92,246,0.04)); }
+.theme-major .card-tag           { color: var(--violet); border-color: rgba(139,92,246,0.35); }
 
 /* ── READ MODAL ─────────────────────────────────────────────────────── */
 .overlay {
@@ -479,6 +477,10 @@ header {
 .md-body blockquote { border-left:2px solid rgba(180,130,50,0.5); padding-left:16px; margin:10px 0; font-style:italic; color:rgba(80,50,10,0.6); }
 .md-body a { color:var(--gold-dim); text-decoration:underline; }
 .md-body hr { border:none; border-top:1px solid rgba(0,0,0,0.1); margin:18px 0; }
+.md-body table { width:100%; border-collapse:collapse; margin:12px 0; font-size:0.875rem; }
+.md-body th { font-family:'Cinzel',serif; font-size:0.72rem; letter-spacing:0.08em; color:var(--ink); background:rgba(0,0,0,0.07); padding:8px 12px; border:1px solid rgba(100,70,20,0.2); text-align:left; }
+.md-body td { color:var(--ink-soft); padding:7px 12px; border:1px solid rgba(100,70,20,0.15); line-height:1.6; }
+.md-body tr:nth-child(even) td { background:rgba(0,0,0,0.03); }
 
 /* ── EDITOR MODAL ───────────────────────────────────────────────────── */
 .editor-overlay {
@@ -955,14 +957,14 @@ header {
 <div class="grimoire">
   <header>
     <span class="sigil">✦</span>
-    <h1 class="header-title">The Grimoire</h1>
+    <h1 class="header-title">The Codex</h1>
     <p class="header-sub">a collection of bound knowledge &amp; arcane notes</p>
     <div class="divider"></div>
-    <button class="new-btn" onclick="openEditor()">✦ Inscribe New Scroll</button>
+    <button class="new-btn" onclick="openEditor()">✦ New Entry</button>
     <div class="data-toolbar">
-      <button class="data-btn" onclick="exportJSON()">⬇ Export Scrolls</button>
+      <button class="data-btn" onclick="exportJSON()">⬇ Export Entries</button>
       <div class="data-toolbar-sep"></div>
-      <button class="data-btn" onclick="openImport()">⬆ Import Scrolls</button>
+      <button class="data-btn" onclick="openImport()">⬆ Import Entries</button>
       <div class="data-toolbar-sep"></div>
       <span class="sync-badge sync-local" id="syncStatus">Local only</span>
       <button class="data-btn" onclick="openSettings()">⚙ Sync Settings</button>
@@ -974,7 +976,7 @@ header {
   <div class="filter-section">
     <div class="search-row">
       <input type="text" id="searchInput" class="search-input"
-             placeholder="✦  search scrolls by title or content…"
+             placeholder="✦  search entries by title or content…"
              oninput="setSearch(this.value)"/>
     </div>
     <div class="filter-label">Filter by Sigil</div>
@@ -1017,7 +1019,7 @@ header {
     </div>
     <div class="editor-fields">
       <div>
-        <label>Title of Scroll</label>
+        <label>Entry Title</label>
         <input type="text" id="edTitle" placeholder="Name this knowledge…"/>
       </div>
       <div style="display:flex;gap:14px;">
@@ -1026,20 +1028,19 @@ header {
           <input type="text" id="edTag" placeholder="#arcana"/>
         </div>
         <div style="flex:1">
-          <label>Aura Color</label>
+          <label>Suit</label>
           <select id="edColor">
-            <option value="theme-violet">Violet — Courts</option>
-            <option value="theme-cyan" selected>Cyan — Water</option>
-            <option value="theme-rose">Rose — Major Arcana</option>
-            <option value="theme-gold">Gold — Wind</option>
-            <option value="theme-ember">Ember — Fire</option>
-            <option value="theme-sage">Sage — Earth</option>
+            <option value="theme-wands">Wands — Fire</option>
+            <option value="theme-cups" selected>Cups — Water</option>
+            <option value="theme-swords">Swords — Air</option>
+            <option value="theme-pentacles">Pentacles — Earth</option>
+            <option value="theme-major">Major Arcana</option>
           </select>
         </div>
       </div>
       <div style="flex:1;display:flex;flex-direction:column;">
         <label>Contents (Markdown Accepted)</label>
-        <textarea id="edContent" placeholder="# Begin your scroll&#10;&#10;Write in **markdown** and let your knowledge flow…"></textarea>
+        <textarea id="edContent" placeholder="# Begin your entry&#10;&#10;Write in **markdown** and let your knowledge flow…"></textarea>
       </div>
       <div class="img-upload-area">
         <label style="margin-bottom:0">Featured Visage <span style="font-weight:400;text-transform:none;font-family:'IM Fell English',serif;font-style:italic;color:rgba(201,164,85,0.35)">(optional)</span></label>
@@ -1075,7 +1076,7 @@ header {
 <div class="import-overlay" id="importOverlay" onclick="closeImportModal(event)">
   <div class="import-card" onclick="event.stopPropagation()">
     <div class="import-header">
-      <h2>⬆ Import Scrolls</h2>
+      <h2>⬆ Import Entries</h2>
       <button onclick="closeImport()">✕</button>
     </div>
     <div class="import-body">
@@ -1094,11 +1095,11 @@ header {
           <button class="import-mode-btn" id="modeReplace" onclick="setImportMode('replace')">⊛ Replace — overwrite everything</button>
         </div>
       </div>
-      <p class="import-note">Only JSON files exported from The Grimoire are supported.<br/>Images stored as URLs will be preserved; uploaded images are embedded as base64.</p>
+      <p class="import-note">Only JSON files exported from The Codex are supported.<br/>Images stored as URLs will be preserved; uploaded images are embedded as base64.</p>
     </div>
     <div class="import-actions">
       <button class="btn-cancel" onclick="closeImport()">Cancel</button>
-      <button class="btn-save" id="importConfirmBtn" onclick="confirmImport()" disabled style="opacity:0.4;cursor:not-allowed">✦ Bind Scrolls</button>
+      <button class="btn-save" id="importConfirmBtn" onclick="confirmImport()" disabled style="opacity:0.4;cursor:not-allowed">✦ Bind Entries</button>
     </div>
   </div>
 </div>
@@ -1154,7 +1155,7 @@ header {
   <div class="confirm-card">
     <div class="confirm-body">
       <div class="confirm-glyph">✕</div>
-      <div class="confirm-title">Banish this scroll?</div>
+      <div class="confirm-title">Delete this entry?</div>
       <div class="confirm-sub" id="confirmCardTitle"></div>
       <div class="confirm-note">This cannot be undone.</div>
     </div>
@@ -1180,31 +1181,30 @@ header {
 
 /* ── Config ────────────────────────────────────────────────────── */
 const glyphs = {
-  'theme-violet': ['☽','✦','⁕','☽'],
-  'theme-cyan':   ['◈','⊹','✦','◈'],
-  'theme-rose':   ['❋','✦','✾','❋'],
-  'theme-gold':   ['⚜','✦','⚜','✦'],
-  'theme-ember':  ['⊛','✦','⊛','✦'],
-  'theme-sage':   ['⁂','✦','⁂','✦'],
+  'theme-wands':    ['⊛','✦','⊛','✦'],
+  'theme-cups':     ['◈','⊹','✦','◈'],
+  'theme-swords':   ['⁕','✦','⁕','✦'],
+  'theme-pentacles':['⚜','✦','⚜','✦'],
+  'theme-major':    ['☽','✦','⁕','☽'],
 };
 const themeColors = {
-  'theme-violet':'#8b5cf6','theme-cyan':'#5de4d4','theme-rose':'#d97b8a',
-  'theme-gold':'#c9a455','theme-ember':'#e07b30','theme-sage':'#5aaa80',
+  'theme-wands':'#e07b30','theme-cups':'#4a9fd4','theme-swords':'#8ba8d4',
+  'theme-pentacles':'#5aaa80','theme-major':'#8b5cf6',
 };
 
 /* ── Sample Data ────────────────────────────────────────────────── */
 const sampleCards = [
-  { id:1, title:"The First Inscription", tag:"#guide", color:"theme-gold", createdAt:"2025-01-06T13:00:00.000Z",
-    content:`# The First Inscription\n\nWelcome, seeker. This is **The Grimoire** — a place to bind your knowledge into scrolls.\n\n## What You May Do\n- Write notes in **Markdown**\n- Filter cards by their sigil tag below the header\n- Click any scroll to read the full text\n- Inscribe new scrolls with the button above\n\n## Markdown is Supported\n\`**bold**\`, *italic*, \`# headings\`, lists, code blocks, and blockquotes.\n\n> *All knowledge begins with a single inscription.*` },
-  { id:2, title:"Arcane Project Ideas", tag:"#arcana", color:"theme-violet", createdAt:"2025-01-05T14:00:00.000Z",
+  { id:1, title:"The First Entry", tag:"#guide", color:"theme-pentacles", createdAt:"2025-01-06T13:00:00.000Z",
+    content:`# The First Entry\n\nWelcome, seeker. This is **The Codex** — a place to bind your knowledge into entries.\n\n## What You May Do\n- Write notes in **Markdown**\n- Filter entries by their sigil tag below the header\n- Click any entry to read the full text\n- Create new entries with the button above\n\n## Markdown is Supported\n\`**bold**\`, *italic*, \`# headings\`, lists, code blocks, and blockquotes.\n\n> *All knowledge begins with a single entry.*` },
+  { id:2, title:"Arcane Project Ideas", tag:"#arcana", color:"theme-major", createdAt:"2025-01-05T14:00:00.000Z",
     content:`# Arcane Project Ideas 🜁\n\nThings to conjure into existence.\n\n## Web Grimoires\n- **This very scroll** — notecards that render markdown\n- A potion recipe manager with ingredient tagging\n- An offline-first dream journal\n\n## Esoteric Learning\n1. WebAssembly rituals\n2. Functional CSS alchemy\n3. The art of offline-first spellcraft\n\n> *"The cosmos is full of knowledge waiting to be named."*` },
-  { id:3, title:"Sourdough Ritual", tag:"#recipes", color:"theme-ember", createdAt:"2025-01-04T09:00:00.000Z",
+  { id:3, title:"Sourdough Ritual", tag:"#recipes", color:"theme-wands", createdAt:"2025-01-04T09:00:00.000Z",
     content:`# Sourdough Bread 🍞\n\n*An overnight binding ritual.*\n\n## Ingredients\n- 450g bread flour\n- 325g water (75°F)\n- 90g active starter\n- 9g salt\n\n## Method\n**1. Mix** — Combine flour and water, rest 30 min.\n**2. Bind** — Fold in starter and salt. Stretch & fold 4× over 2 hrs.\n**3. Shape** — Form a boule. Refrigerate overnight.\n**4. Conjure** — Dutch oven 500°F: 20 min covered, 25 min uncovered.\n\n*Score deeply before baking for the best bloom.*` },
-  { id:4, title:"Tomes of Wisdom", tag:"#books", color:"theme-cyan", createdAt:"2025-01-03T11:00:00.000Z",
+  { id:4, title:"Tomes of Wisdom", tag:"#books", color:"theme-cups", createdAt:"2025-01-03T11:00:00.000Z",
     content:`# Tomes of Wisdom\n\n## Thinking, Fast and Slow — Kahneman\n\n- **System 1** — swift, instinctive, emotional\n- **System 2** — slow, deliberate, rational\n\nThe illusion: we believe we think deliberately far more than we do.\n\n---\n\n## Atomic Habits — Clear\n\n> *"You do not rise to the level of your goals. You fall to the level of your systems."*\n\n1. Make it obvious\n2. Make it attractive\n3. Make it easy\n4. Make it satisfying` },
-  { id:5, title:"Weekly Ritual Checklist", tag:"#rituals", color:"theme-rose", createdAt:"2025-01-02T16:00:00.000Z",
+  { id:5, title:"Weekly Ritual Checklist", tag:"#rituals", color:"theme-swords", createdAt:"2025-01-02T16:00:00.000Z",
     content:`# Weekly Review ✦\n\n## Completed Rites\n- [x] Shipped the grimoire prototype\n- [x] Reviewed the tome of PRs\n- [x] Communed with family\n\n## In Progress\n- [ ] Inscribe unit test scrolls\n- [ ] Update the design token grimoire\n- [ ] Plan the Q3 vision ritual\n\n## Next Week's Focus\n1. Performance augury\n2. Onboarding flow enchantment\n3. Team retrospective circle` },
-  { id:6, title:"Markdown Spellbook", tag:"#guide", color:"theme-sage", createdAt:"2025-01-01T10:00:00.000Z",
+  { id:6, title:"Markdown Spellbook", tag:"#guide", color:"theme-pentacles", createdAt:"2025-01-01T10:00:00.000Z",
     content:`# Markdown Spellbook\n\nAll formatting runes at your disposal.\n\n## Text Enchantments\n**Bold**, *italic*, ~~crossed out~~, \`inline rune\`\n\n## Code Ritual\n\`\`\`js\nconst summon = name => \`Arise, \${name}!\`;\n\`\`\`\n\n## The Wise Say\n> *Less is more — unless the spell demands more.*\n\n## Nested Scrolls\n- Portals to knowledge\n  - Inner rite one\n  - Inner rite two\n\n---\n*Tables and images shall come in the next age.*` },
 ];
 
@@ -1242,7 +1242,7 @@ async function save(){
     const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
     const doput = async (sha) => {
       const body = {
-        message: `Update grimoire — ${new Date().toISOString().slice(0,10)}`,
+        message: `Update codex — ${new Date().toISOString().slice(0,10)}`,
         content,
         ...(sha ? { sha } : {}),
         ...(ghConfig.branch ? { branch: ghConfig.branch } : {})
@@ -1279,7 +1279,7 @@ function checkStorage(){
     const el  = document.getElementById('storageWarning');
     if(kb > 3500){
       el.style.display = '';
-      el.textContent   = `⚠ Grimoire is using ~${kb}KB of localStorage (~5MB limit). Export your scrolls to avoid data loss.`;
+      el.textContent   = `⚠ Codex is using ~${kb}KB of localStorage (~5MB limit). Export your entries to avoid data loss.`;
     } else {
       el.style.display = 'none';
     }
@@ -1305,7 +1305,7 @@ function getAllTags(){
 function renderFilters(){
   document.getElementById('filterBar').innerHTML = getAllTags().map(tag=>`
     <button class="filter-pill ${activeTag===tag?'active':''}" onclick="setFilter('${esc(tag)}')">
-      ${tag==='all' ? '✦ All Scrolls' : esc(tag)}
+      ${tag==='all' ? '✦ All Entries' : esc(tag)}
     </button>`).join('');
 }
 
@@ -1351,11 +1351,11 @@ function renderCards(){
   const visible = getVisibleCards();
 
   if(!cards.length){
-    grid.innerHTML = '<div class="empty-state"><p>No scrolls yet — inscribe the first one.</p></div>';
+    grid.innerHTML = '<div class="empty-state"><p>No entries yet — create the first one.</p></div>';
     renderFilters(); return;
   }
   if(!visible.length){
-    grid.innerHTML = '<div class="empty-state"><p>No scrolls match — try a different search or filter.</p></div>';
+    grid.innerHTML = '<div class="empty-state"><p>No entries match — try a different search or filter.</p></div>';
     renderFilters(); return;
   }
 
@@ -1377,7 +1377,7 @@ function renderCards(){
           <span class="card-tag">${esc(card.tag)}</span>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
             ${dateEl}
-            <span class="card-open">open scroll →</span>
+            <span class="card-open">open entry →</span>
           </div>
         </div>
       </div>
@@ -1411,7 +1411,7 @@ function openCard(id){
   else { mfi.style.display='none'; mfi.src=''; }
   const meta  = document.getElementById('modalMeta');
   const parts = [];
-  if(card.createdAt) parts.push(`Inscribed ${formatDate(card.createdAt)}`);
+  if(card.createdAt) parts.push(`Created ${formatDate(card.createdAt)}`);
   if(card.updatedAt) parts.push(`Revised ${formatDate(card.updatedAt)}`);
   meta.textContent = parts.join(' · ');
 
@@ -1509,13 +1509,13 @@ function openEditor(id){
   const isEdit = editingId !== null;
   const card = isEdit ? cards.find(c=>c.id===editingId) : null;
 
-  document.getElementById('editorTitle').textContent = isEdit ? '✎ Revise Scroll' : '✦ Inscribe New Scroll';
-  document.getElementById('edSaveBtn').innerHTML     = isEdit ? '✦ Re-seal Scroll' : '✦ Seal &amp; Pin';
+  document.getElementById('editorTitle').textContent = isEdit ? '✎ Edit Entry' : '✦ New Entry';
+  document.getElementById('edSaveBtn').innerHTML     = isEdit ? '✦ Save Entry' : '✦ Save Entry';
 
   document.getElementById('edTitle').value   = card ? card.title   : '';
   document.getElementById('edTag').value     = card ? card.tag     : '';
   document.getElementById('edContent').value = card ? card.content : '';
-  document.getElementById('edColor').value   = card ? card.color   : 'theme-cyan';
+  document.getElementById('edColor').value   = card ? card.color   : 'theme-cups';
 
   // Image
   if(card && card.image){ setImagePreview(card.image); }
@@ -1535,10 +1535,10 @@ function closeEditor(){ document.getElementById('editorOverlay').classList.remov
 function closeEditorModal(e){ if(e.target===document.getElementById('editorOverlay')) closeEditor(); }
 
 function saveCard(){
-  const title   = document.getElementById('edTitle').value.trim()   || 'Untitled Scroll';
+  const title   = document.getElementById('edTitle').value.trim()   || 'Untitled Entry';
   const tag     = document.getElementById('edTag').value.trim()     || '#unknown';
   const color   = document.getElementById('edColor').value;
-  const content = document.getElementById('edContent').value.trim() || '*This scroll was left empty.*';
+  const content = document.getElementById('edContent').value.trim() || '*This entry was left empty.*';
   const image   = currentImage || null;
 
   const now = new Date().toISOString();
@@ -1635,12 +1635,12 @@ function readImportFile(file){
       // Light validation
       incoming.forEach(c => { if(typeof c.title !== 'string') throw new Error('Invalid card shape'); });
       importData = incoming;
-      status.textContent = `✦ ${incoming.length} scroll${incoming.length!==1?'s':''} ready to bind.`;
+      status.textContent = `✦ ${incoming.length} entr${incoming.length!==1?'ies':'y'} ready to bind.`;
       status.className = 'import-status ok';
       setImportReady(true);
     } catch(err) {
       importData = null;
-      status.textContent = '✕ Could not read file — make sure it is a Grimoire export.';
+      status.textContent = '✕ Could not read file — make sure it is a Codex export.';
       status.className = 'import-status err';
       setImportReady(false);
     }
@@ -1698,7 +1698,7 @@ async function loadFromGitHub(){
     cards  = stored ? JSON.parse(stored) : sampleCards.map(c=>({...c}));
     nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
     setSyncStatus('local','Local only');
-    migrateMissingTimestamps();
+    migrateMissingTimestamps(); migrateThemes();
     renderCards();
     checkStorage();
     return;
@@ -1723,7 +1723,7 @@ async function loadFromGitHub(){
     cards  = Array.isArray(parsed) ? parsed : (parsed.cards || []);
     nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
     setSyncStatus('ok','Synced ✓');
-    migrateMissingTimestamps();
+    migrateMissingTimestamps(); migrateThemes();
     renderCards();
     checkStorage();
   }catch(e){
@@ -1732,7 +1732,7 @@ async function loadFromGitHub(){
     const stored = localStorage.getItem('grimoire_v2');
     cards  = stored ? JSON.parse(stored) : [];
     nextId = cards.length ? Math.max(...cards.map(c=>c.id), 0) + 1 : 1;
-    migrateMissingTimestamps();
+    migrateMissingTimestamps(); migrateThemes();
     renderCards();
     checkStorage();
   }
@@ -1741,6 +1741,16 @@ async function loadFromGitHub(){
 function migrateMissingTimestamps(){
   let changed = false;
   cards.forEach(c=>{ if(!c.createdAt){ c.createdAt = new Date().toISOString(); changed=true; } });
+  if(changed) saveLocal();
+}
+
+function migrateThemes(){
+  const map = {
+    'theme-violet':'theme-major','theme-cyan':'theme-cups','theme-rose':'theme-major',
+    'theme-gold':'theme-pentacles','theme-ember':'theme-wands','theme-sage':'theme-pentacles'
+  };
+  let changed = false;
+  cards.forEach(c=>{ if(map[c.color]){ c.color = map[c.color]; changed=true; } });
   if(changed) saveLocal();
 }
 
