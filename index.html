@@ -1726,7 +1726,7 @@ async function loadFromGitHub(){
     renderCards();
     checkStorage();
   }catch(e){
-    setSyncStatus('error','Load failed');
+    setSyncStatus('error', e.message ? `Load failed: ${e.message}` : 'Load failed');
     console.error(e);
     const stored = localStorage.getItem('grimoire_v2');
     cards  = stored ? JSON.parse(stored) : [];
