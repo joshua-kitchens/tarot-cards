@@ -1121,40 +1121,27 @@ header {
   </div>
 </div>
 
-<!-- GitHub Sync Settings Overlay -->
+<!-- Server Sync Settings Overlay -->
 <div class="settings-overlay" id="settingsOverlay" onclick="bgCloseSettings(event)">
   <div class="settings-card" onclick="event.stopPropagation()">
     <div class="settings-header">
-      <h2>☁ GitHub Sync</h2>
+      <h2>⚙ Server Sync</h2>
       <button onclick="closeSettings()">✕</button>
     </div>
     <div class="settings-body">
       <p class="settings-note">
-        Saves <code>grimoire_data.json</code> directly to your GitHub repo via the Contents API.
-        Requires a <a href="https://github.com/settings/tokens" target="_blank">Personal Access Token</a>
-        with <code>Contents: Read &amp; Write</code> permission.
-        The token is stored only in this browser's localStorage.
+        Connects to your Raspberry Pi server to sync entries across devices.
+        Leave the URL blank when accessing this page directly from the Pi.
+        Set <code>API_KEY</code> as an environment variable on the server to enable key protection.
       </p>
       <div class="settings-grid">
         <div class="settings-field full">
-          <label>Personal Access Token</label>
-          <input type="password" id="sToken" placeholder="github_pat_…" autocomplete="off"/>
+          <label>Server URL</label>
+          <input type="text" id="sUrl" placeholder="http://raspberrypi.local:3000  (blank = same device)"/>
         </div>
-        <div class="settings-field">
-          <label>Owner (username or org)</label>
-          <input type="text" id="sOwner" placeholder="your-username"/>
-        </div>
-        <div class="settings-field">
-          <label>Repository Name</label>
-          <input type="text" id="sRepo" placeholder="tarot-cards"/>
-        </div>
-        <div class="settings-field">
-          <label>File Path</label>
-          <input type="text" id="sFile" placeholder="grimoire_data.json"/>
-        </div>
-        <div class="settings-field">
-          <label>Branch</label>
-          <input type="text" id="sBranch" placeholder="main"/>
+        <div class="settings-field full">
+          <label>API Key (optional)</label>
+          <input type="password" id="sApiKey" placeholder="leave blank if no key is set" autocomplete="off"/>
         </div>
         <div class="conn-status" id="connStatus"></div>
       </div>
@@ -1236,8 +1223,7 @@ let sortOrder   = 'newest';
 let pendingDeleteId = null;
 const mdCache   = new Map();
 
-let fileSha = null;
-let ghConfig = JSON.parse(localStorage.getItem('grimoire_gh') || 'null');
+let serverConfig = JSON.parse(localStorage.getItem('codex_server') || 'null');
 
 function setSyncStatus(state, msg){
   const el = document.getElementById('syncStatus');
@@ -1252,39 +1238,18 @@ function saveLocal(){
 
 async function save(){
   saveLocal();
-  if(!ghConfig?.token || !ghConfig?.owner || !ghConfig?.repo){ setSyncStatus('local','Local only'); return; }
+  if(!serverConfig){ setSyncStatus('local','Local only'); return; }
   setSyncStatus('saving','Saving…');
   try{
     const payload = { version:1, exported:new Date().toISOString(), cards };
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
-    const doput = async (sha) => {
-      const body = {
-        message: `Update codex — ${new Date().toISOString().slice(0,10)}`,
-        content,
-        ...(sha ? { sha } : {}),
-        ...(ghConfig.branch ? { branch: ghConfig.branch } : {})
-      };
-      return fetch(ghUrl(), {
-        method: 'PUT',
-        headers: { ...ghHeaders(), 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-    };
-    let res = await doput(fileSha);
-    if(res.status === 409 || res.status === 422){
-      // Stale SHA — re-fetch current SHA and retry once
-      const params = ghConfig.branch ? `?ref=${ghConfig.branch}` : '';
-      const cur = await fetch(ghUrl() + params, { headers: ghHeaders() });
-      if(cur.ok){ const d = await cur.json(); fileSha = d.sha; }
-      else fileSha = null;
-      res = await doput(fileSha);
-    }
-    if(!res.ok){ const e = await res.json(); throw new Error(e.message || `GitHub ${res.status}`); }
-    const data = await res.json();
-    fileSha = data.content.sha;
+    const url = serverConfig.url ? `${serverConfig.url}/data` : '/data';
+    const headers = { 'Content-Type': 'application/json' };
+    if(serverConfig.apiKey) headers['X-Api-Key'] = serverConfig.apiKey;
+    const res = await fetch(url, { method:'PUT', headers, body:JSON.stringify(payload, null, 2) });
+    if(!res.ok){ const e = await res.json().catch(()=>({})); throw new Error(e.error || `Server ${res.status}`); }
     setSyncStatus('ok','Saved ✓');
   }catch(e){
-    setSyncStatus('error','Save failed');
+    setSyncStatus('error', e.message ? `Save failed: ${e.message}` : 'Save failed');
     console.error(e);
   }
 }
@@ -1695,22 +1660,9 @@ function confirmImport(){
   });
 })();
 
-/* ── GitHub Contents API Sync ───────────────────────────────────── */
-function ghHeaders(){
-  return {
-    'Authorization': `Bearer ${ghConfig.token}`,
-    'Accept': 'application/vnd.github+json',
-    'X-GitHub-Api-Version': '2022-11-28'
-  };
-}
-
-function ghUrl(){
-  const f = ghConfig.file || 'grimoire_data.json';
-  return `https://api.github.com/repos/${ghConfig.owner}/${ghConfig.repo}/contents/${f}`;
-}
-
-async function loadFromGitHub(){
-  if(!ghConfig?.token || !ghConfig?.owner || !ghConfig?.repo){
+/* ── Server Sync ────────────────────────────────────────────────── */
+async function loadFromServer(){
+  if(!serverConfig){
     const stored = localStorage.getItem('grimoire_v2');
     cards  = stored ? JSON.parse(stored) : sampleCards.map(c=>({...c}));
     nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
@@ -1722,23 +1674,14 @@ async function loadFromGitHub(){
   }
   setSyncStatus('saving','Loading…');
   try{
-    const params = ghConfig.branch ? `?ref=${ghConfig.branch}` : '';
-    const res = await fetch(ghUrl() + params, { headers: ghHeaders() });
-    if(res.status === 404){
-      cards  = [];
-      fileSha = null;
-      nextId  = 1;
-      setSyncStatus('ok','Connected — no data file yet');
-      renderCards();
-      return;
-    }
-    if(!res.ok) throw new Error(`GitHub ${res.status}`);
-    const data = await res.json();
-    fileSha = data.sha;
-    const raw = atob(data.content.replace(/\n/g,''));
-    const parsed = raw.trim() ? JSON.parse(raw) : [];
+    const url = serverConfig.url ? `${serverConfig.url}/data` : '/data';
+    const headers = {};
+    if(serverConfig.apiKey) headers['X-Api-Key'] = serverConfig.apiKey;
+    const res = await fetch(url, { headers });
+    if(!res.ok) throw new Error(`Server ${res.status}`);
+    const parsed = await res.json();
     cards  = Array.isArray(parsed) ? parsed : (parsed.cards || []);
-    nextId = Math.max(...cards.map(c=>c.id), 0) + 1;
+    nextId = cards.length ? Math.max(...cards.map(c=>c.id), 0) + 1 : 1;
     setSyncStatus('ok','Synced ✓');
     migrateMissingTimestamps(); migrateThemes();
     renderCards();
@@ -1773,12 +1716,9 @@ function migrateThemes(){
 
 // ── Settings modal ──
 function openSettings(){
-  const c = ghConfig || {};
-  document.getElementById('sToken').value  = c.token  || '';
-  document.getElementById('sOwner').value  = c.owner  || '';
-  document.getElementById('sRepo').value   = c.repo   || '';
-  document.getElementById('sFile').value   = c.file   || 'grimoire_data.json';
-  document.getElementById('sBranch').value = c.branch || 'main';
+  const c = serverConfig || {};
+  document.getElementById('sUrl').value    = c.url    || '';
+  document.getElementById('sApiKey').value = c.apiKey || '';
   const cs = document.getElementById('connStatus');
   cs.className = 'conn-status'; cs.textContent = '';
   document.getElementById('settingsOverlay').classList.add('open');
@@ -1793,11 +1733,8 @@ function bgCloseSettings(e){ if(e.target===document.getElementById('settingsOver
 
 function getSettingsValues(){
   return {
-    token:  document.getElementById('sToken').value.trim(),
-    owner:  document.getElementById('sOwner').value.trim(),
-    repo:   document.getElementById('sRepo').value.trim(),
-    file:   document.getElementById('sFile').value.trim()   || 'grimoire_data.json',
-    branch: document.getElementById('sBranch').value.trim() || 'main'
+    url:    document.getElementById('sUrl').value.trim().replace(/\/+$/, ''),
+    apiKey: document.getElementById('sApiKey').value.trim()
   };
 }
 
@@ -1805,46 +1742,30 @@ async function testConnection(){
   const c   = getSettingsValues();
   const btn = document.getElementById('testBtn');
   const cs  = document.getElementById('connStatus');
-  if(!c.token || !c.owner || !c.repo){
-    cs.className = 'conn-status conn-error';
-    cs.textContent = 'Please fill in token, owner, and repo first.';
-    return;
-  }
   btn.textContent = 'Testing…'; btn.disabled = true;
   try{
-    const params = c.branch ? `?ref=${c.branch}` : '';
-    const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${c.file}${params}`;
-    const res = await fetch(url, {
-      headers: { 'Authorization': `Bearer ${c.token}`, 'Accept': 'application/vnd.github+json' }
-    });
-    if(res.status === 404){
+    const url = c.url ? `${c.url}/data` : '/data';
+    const headers = {};
+    if(c.apiKey) headers['X-Api-Key'] = c.apiKey;
+    const res = await fetch(url, { headers });
+    if(res.ok){
       cs.className = 'conn-status conn-ok';
-      cs.textContent = `✓ Repo found — ${c.file} will be created on first save.`;
-    } else if(res.ok){
-      cs.className = 'conn-status conn-ok';
-      cs.textContent = `✓ Connected — ${c.file} found and ready.`;
+      cs.textContent = '✓ Connected — server is reachable.';
     } else {
       throw new Error(`HTTP ${res.status}`);
     }
   }catch(e){
     cs.className = 'conn-status conn-error';
-    cs.textContent = `✗ ${e.message} — check token, owner, and repo name.`;
+    cs.textContent = `✗ ${e.message} — check server URL and API key.`;
   }
   btn.textContent = 'Test Connection'; btn.disabled = false;
 }
 
 async function saveSettings(){
-  const c = getSettingsValues();
-  if(!c.token || !c.owner || !c.repo){
-    document.getElementById('connStatus').className = 'conn-status conn-error';
-    document.getElementById('connStatus').textContent = 'Token, owner, and repo are required.';
-    return;
-  }
-  ghConfig = c;
-  localStorage.setItem('grimoire_gh', JSON.stringify(ghConfig));
+  serverConfig = getSettingsValues();
+  localStorage.setItem('codex_server', JSON.stringify(serverConfig));
   closeSettings();
-  fileSha = null;
-  await loadFromGitHub();
+  await loadFromServer();
 }
 
 /* ── Keyboard ───────────────────────────────────────────────────── */
@@ -1852,7 +1773,7 @@ document.addEventListener('keydown', e=>{
   if(e.key==='Escape'){ closeOverlay(); closeEditor(); closeImport(); cancelDelete(); closeSettings(); }
 });
 
-loadFromGitHub();
+loadFromServer();
 </script>
 </body>
 </html>
