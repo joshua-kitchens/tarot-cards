@@ -12,7 +12,7 @@ const path = require('path');
 const PORT      = parseInt(process.env.PORT || '3030', 10);
 const API_KEY   = process.env.API_KEY || '';
 const DATA_FILE = path.join(__dirname, 'codex_data.json');
-const STATIC    = path.join(__dirname, 'tarot-cards');
+const STATIC    = __dirname; // index.html lives in the same folder as server.js
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -102,6 +102,12 @@ const server = http.createServer((req, res) => {
     res.writeHead(403); res.end('Forbidden'); return;
   }
 
+  // Block server internals from being downloaded
+  const base = path.basename(filePath);
+  if (base === 'server.js' || base === 'codex_data.json') {
+    res.writeHead(403); res.end('Forbidden'); return;
+  }
+
   // Directory → index.html
   if (!path.extname(filePath)) filePath = path.join(filePath, 'index.html');
 
@@ -116,5 +122,10 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Codex → http://localhost:${PORT}`);
+  console.log(`Serving files from: ${STATIC}`);
+  console.log(`Data file: ${DATA_FILE}`);
   if (API_KEY) console.log('API key protection: enabled');
+  if (!fs.existsSync(path.join(STATIC, 'index.html'))) {
+    console.warn('WARNING: index.html not found in', STATIC);
+  }
 });

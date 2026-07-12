@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r \"fetch.*github\\\\|axios.*github\\\\|fetch.*gist\\\\|sync.*localStorage\\\\|IndexedDB\" \"/c/Users/joshu/My Drive/projects/sites\" --include=\"*.js\" --include=\"*.jsx\" --include=\"*.ts\" --include=\"*.tsx\" ! -path \"*/.vscode-server/*\" ! -path \"*/node_modules/*\" ! -path \"*/tarot-cards/*\")",
+      "Bash(grep -r \"IndexedDB\\\\|idb\\\\|pouchdb\\\\|localforage\\\\|Service.*[Ww]orker\\\\|sync.*DB\\\\|cloud.*sync\" \"/c/Users/joshu/My Drive/projects/sites\" --include=\"*.js\" ! -path \"*/.vscode-server/*\" ! -path \"*/node_modules/*\" ! -path \"*/tarot-cards/*\")",
+      "Bash(grep -r \"github.com\\\\|api.github\\\\|gist.github\\\\|github.*token\\\\|GitHub.*API\" \"/c/Users/joshu/My Drive/projects/sites\" ! -path \"*/tarot-cards/*\" ! -path \"*/.vscode-server/*\" ! -path \"*/node_modules/*\" --include=\"*.js\" --include=\"*.html\")",
+      "Read(//c/Users/joshu/My Drive/projects/**)"
+    ]
+  }
+}
