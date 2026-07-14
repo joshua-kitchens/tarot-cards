@@ -1,0 +1,14 @@
+[Unit]
+Description=Codex Server
+After=network.target
+
+[Service]
+Type=simple
+User=pill
+WorkingDirectory=/var/www/html/tarot-cards
+Restart=always
+RestartSec=5
+Environment=PORT=3030
+
+[Install]
+WantedBy=multi-user.target
