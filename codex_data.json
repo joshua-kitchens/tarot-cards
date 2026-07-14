@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "exported": "2026-07-13T22:14:17.577Z",
+  "exported": "2026-07-14T21:37:43.050Z",
   "cards": [
     {
       "id": 1,
@@ -10,6 +10,16 @@
       "content": "# Tower Meaning Upright\n\n# Tower Meaning Reversed",
       "image": null,
       "createdAt": "2026-07-13T22:14:17.577Z"
+    },
+    {
+      "id": 2,
+      "title": "Two Swords",
+      "tag": "#decisions",
+      "color": "theme-swords",
+      "content": "# Two of Swords Upright\nThis card implies a stalemate. There are two opposing directions/ideas/ issues at play. A person must choose between these opposing positions. Neither direction is appealing. This card usually reflects partnerships and a need for balance.\n\n# Two of Swords Reversed\n\"The situation we see in the reversed Two of Swords is a stalemate of a legendary kind, one where two forces are battling each other. This battle can be representative of both something internal or external, and you are forced to be in between and be the decision maker. However, because neither party seems particularly pleasing to work with, you may find yourself confused, the pressure is too much, and you are unable to make a decision.\n\nWhen you do make the decision, it will be choosing between two bad outcomes. Do not worry, the more important thing here is to make a choice, from then on, we can deal with whatever consequences come.\" https://labyrinthos.co/blogs/tarot-card-meanings-list/two-of-swords-meaning-tarot-card-meanings",
+      "image": null,
+      "createdAt": "2026-07-14T21:27:12.782Z",
+      "updatedAt": "2026-07-14T21:37:43.049Z"
     }
   ]
 }
