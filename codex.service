@@ -4,11 +4,15 @@ After=network.target
 
 [Service]
 Type=simple
-User=pill
-WorkingDirectory=/var/www/html/tarot-cards
+User=jkitchens
+WorkingDirectory=/srv/sites/tarot-cards
+ExecStart=/usr/bin/node server.js
 Restart=always
 RestartSec=5
-Environment=PORT=3030
+Environment=PORT=3003
+Environment=HOST=127.0.0.1
+# API_KEY lives here so the secret stays out of git
+EnvironmentFile=-/etc/tarot-cards.env
 
 [Install]
 WantedBy=multi-user.target

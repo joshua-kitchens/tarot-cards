@@ -2,7 +2,8 @@
 // Codex server — serves the static site and provides a simple data API.
 // Usage: node server.js
 // Env vars:
-//   PORT=3000       (default 3000)
+//   PORT=3030       (default 3030)
+//   HOST=127.0.0.1  (default 0.0.0.0 — use 127.0.0.1 behind a reverse proxy)
 //   API_KEY=secret  (optional — if set, all /data requests must include X-Api-Key header)
 
 const http = require('http');
@@ -10,6 +11,7 @@ const fs   = require('fs');
 const path = require('path');
 
 const PORT      = parseInt(process.env.PORT || '3030', 10);
+const HOST      = process.env.HOST || '0.0.0.0';
 const API_KEY   = process.env.API_KEY || '';
 const DATA_FILE = path.join(__dirname, 'codex_data.json');
 const STATIC    = __dirname; // index.html lives in the same folder as server.js
@@ -120,8 +122,8 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, '0.0.0.0', () => {
-  console.log(`Codex → http://localhost:${PORT}`);
+server.listen(PORT, HOST, () => {
+  console.log(`Codex → http://${HOST}:${PORT}`);
   console.log(`Serving files from: ${STATIC}`);
   console.log(`Data file: ${DATA_FILE}`);
   if (API_KEY) console.log('API key protection: enabled');
