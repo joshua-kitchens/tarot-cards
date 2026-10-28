@@ -1,0 +1,113 @@
+# Copy tarot-cards to the droplet on every push to main.
+# Save this in the tarot-cards repo as:  .github/workflows/deploy.yml
+#
+# Needs these repo secrets (Settings > Secrets and variables > Actions):
+#   DEPLOY_HOST, DEPLOY_USER, DEPLOY_SSH_KEY, DEPLOY_KNOWN_HOSTS, optional DEPLOY_PORT
+#
+# Droplet folder: /srv/sites/tarot-cards  (service: tarot-cards)
+# Files that live only on the droplet (data) are never overwritten or deleted:
+# rsync runs without --delete, and the data files below are excluded.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEST: /srv/sites/tarot-cards
+      SERVICE: "tarot-cards"
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+
+      # Refuse to deploy a server.js that doesn't even parse.
+      - name: Check
+        run: node --check server.js
+
+      - name: Upload to droplet
+        if: env.DEPLOY_HOST != ''
+        env:
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+        run: |
+          mkdir -m 700 -p ~/.ssh
+          # Secrets pasted on Windows can carry \r, which breaks both files.
+          printf '%s\n' "$DEPLOY_SSH_KEY" | tr -d '\r' > ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" | tr -d '\r' > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/deploy_key ~/.ssh/known_hosts
+          SSH="ssh -i $HOME/.ssh/deploy_key -p ${DEPLOY_PORT:-22} -o BatchMode=yes -o ConnectTimeout=15"
+
+          if ! ssh-keygen -y -f ~/.ssh/deploy_key > /dev/null; then
+            echo "::error::DEPLOY_SSH_KEY isn't a readable private key. Paste the whole private key file, including the BEGIN and END lines."
+            exit 1
+          fi
+          if ! grep -q '^[^#]' ~/.ssh/known_hosts; then
+            echo "::error::DEPLOY_KNOWN_HOSTS is empty. Set it to the output of: ssh-keyscan $DEPLOY_HOST"
+            exit 1
+          fi
+
+          echo "Checking SSH login as $DEPLOY_USER@$DEPLOY_HOST (port ${DEPLOY_PORT:-22})..."
+          if ! out=$($SSH "$DEPLOY_USER@$DEPLOY_HOST" 'echo ok; command -v rsync' 2>&1); then
+            echo "$out"
+            case "$out" in
+              *"Host key verification failed"*|*"No ED25519 host key"*|*"REMOTE HOST IDENTIFICATION"*)
+                echo "::error::Host key mismatch. Re-run 'ssh-keyscan $DEPLOY_HOST' and paste the output into DEPLOY_KNOWN_HOSTS." ;;
+              *"Permission denied"*)
+                echo "::error::Key rejected. Check the public key is in /home/$DEPLOY_USER/.ssh/authorized_keys and that DEPLOY_USER is right." ;;
+              *"timed out"*|*"Connection refused"*|*"No route"*|*"Could not resolve"*)
+                echo "::error::Can't reach $DEPLOY_HOST on port ${DEPLOY_PORT:-22}. Check the IP, the DigitalOcean/ufw firewall, and DEPLOY_PORT if SSH isn't on 22." ;;
+              *)
+                echo "::error::SSH login failed; see the output above." ;;
+            esac
+            exit 1
+          fi
+          if ! grep -q rsync <<<"$out"; then
+            echo "::error::rsync isn't installed on the droplet. Run: sudo apt install -y rsync"
+            exit 1
+          fi
+
+          # -c compares file contents, not timestamps (a CI checkout gives every file a new
+          # timestamp), so only files that really changed are sent.
+          changes=$(rsync -azic -e "$SSH" \
+            --exclude '/.git/' \
+            --exclude '/.github/' \
+            --exclude '/.claude/' \
+            --exclude '/.gitignore' \
+            --exclude '/.gitattributes' \
+            --exclude '/LICENSE' \
+            --exclude '/README.md' \
+            --exclude '/DEPLOY.md' \
+            --exclude '/*.service' \
+            --exclude '/deploy/' \
+            --exclude '/node_modules/' \
+            --exclude '/grimoire_data.json' \
+            --exclude '/codex_data.json' \
+            ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEST/")
+          echo "$changes"
+
+          # Lines starting with ">" are files whose content was actually sent.
+          restart=0
+          if grep -q '^>f.* server\.js$' <<<"$changes"; then restart=1; fi
+          if [ "$restart" = 1 ]; then
+            echo "Restarting $SERVICE"
+            $SSH "$DEPLOY_USER@$DEPLOY_HOST" "sudo -n /usr/bin/systemctl restart $SERVICE" \
+              || echo "::warning::Could not restart $SERVICE. Run 'sudo systemctl restart $SERVICE' on the droplet."
+          fi
+
+      - name: Deploy skipped
+        if: env.DEPLOY_HOST == ''
+        run: echo "::warning::DEPLOY_HOST secret not set; checks passed but nothing was uploaded."
